@@ -10,6 +10,10 @@ import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        Text("Select an item")
+        ClockFlipViewUsage(config: .stopwatch(startTime: 100))
     }
+}
+
+#Preview {
+    ContentView()
 }
