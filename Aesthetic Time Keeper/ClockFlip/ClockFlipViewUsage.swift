@@ -72,6 +72,8 @@ struct ClockFlipViewUsage: View {
                     Spacer()
                 }
             }
+            
+            ControlButtonsView(stop: $stop, count: $count)
         }
         .onReceive(timer) { _ in
             guard !stop else { return }
@@ -136,6 +138,7 @@ struct ClockFlipViewUsage: View {
     
     @State private var count: Double = 0
     @State private var stop = false
+    @State private var isMenuExpanded = false
     
     private var minutes: Int {
         config.minutes(from: count)

@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     var body: some View {
-        ClockFlipViewUsage(config: .stopwatch(startTime: 100))
+        ClockFlipViewUsage(config: .stopwatch(startTime: 1000))
     }
 }
 
