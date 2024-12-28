@@ -13,21 +13,21 @@ final class ControlButtonsViewModel: ObservableObject {
     // MARK: - Internal
     
     @Published var isMenuExpanded = false
+    @Published var isStopped = false {
+        didSet {
+            clockState.isStopped = isStopped
+        }
+    }
     let config: ControlButtonsViewConfig
-    
-    // MARK: - Private
-
-    @Binding private(set) var isStopState: Bool
-    @Binding private(set) var count: Double
+    @ObservedObject var clockState: ClockState
     
     // MARK: - Init
     
-    init(isStopState: Binding<Bool>,
-         count: Binding<Double>,
+    init(clockState: ClockState,
          config: ControlButtonsViewConfig = .default) {
-        self._isStopState = isStopState
-        self._count = count
+        self.clockState = clockState
         self.config = config
+        self.isStopped = clockState.isStopped
     }
     
     // MARK: - Action Handling
@@ -39,12 +39,12 @@ final class ControlButtonsViewModel: ObservableObject {
     }
     
     func handleStopButtonAction() {
-        isStopState = true
-        count = 0
+        isStopped = true
+        clockState.count = 0
     }
     
     func handlePlayPauseButtonAction() {
-        isStopState.toggle()
+        isStopped.toggle()
     }
 }
 
@@ -65,8 +65,7 @@ struct ControlButtonsViewConfig {
 // MARK: - Preview
 #Preview {
     ControlButtonsView(
-        stop: .constant(false),
-        count: .constant(0),
+        clockState: .init(),
         config: ControlButtonsViewConfig(mainButton: 160)
     )
 } 

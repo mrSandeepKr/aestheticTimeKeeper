@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ClockFlipView: View {
+struct NumberFlipView: View {
     @Binding var value: Int
     
     var size: CGSize

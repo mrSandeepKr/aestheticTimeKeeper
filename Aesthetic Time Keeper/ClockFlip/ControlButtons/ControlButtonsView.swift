@@ -2,15 +2,13 @@ import SwiftUI
 
 // MARK: - View
 struct ControlButtonsView: View {
-    @StateObject private var viewModel: ControlButtonsViewModel
+    @StateObject var viewModel: ControlButtonsViewModel
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
-    init(stop: Binding<Bool>, 
-         count: Binding<Double>, 
+    init(clockState: ClockState, 
          config: ControlButtonsViewConfig = .default) {
         _viewModel = StateObject(wrappedValue: ControlButtonsViewModel(
-            isStopState: stop,
-            count: count,
+            clockState: clockState,
             config: config
         ))
     }
@@ -91,7 +89,7 @@ struct ControlButtonsView: View {
         Button {
             viewModel.handlePlayPauseButtonAction()
         } label: {
-            Image(systemName: viewModel.isStopState ? "play.fill" : "pause.fill")
+            Image(systemName: viewModel.isStopped ? "play.fill" : "pause.fill")
                 .font(.system(size: viewModel.config.popoutButtonFont))
                 .foregroundColor(Color(cgColor: UIColor.systemBackground.cgColor))
                 .frame(width: viewModel.config.popoutButtonSize,
@@ -130,8 +128,7 @@ struct ControlButtonsView: View {
 // MARK: - Preview
 #Preview {
     ControlButtonsView(
-        stop: .constant(false), 
-        count: .constant(0),
+        clockState: .init(),
         config: ControlButtonsViewConfig(mainButton: 160)
     )
 } 

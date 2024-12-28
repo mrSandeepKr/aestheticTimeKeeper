@@ -10,40 +10,15 @@ import SwiftUI
 import Vortex
 
 struct ClockFlipViewUsage: View {
-    
-    enum Config {
-        case timer(maxCountInSeconds: Int)
-        case stopwatch(startTime: Int)
-        
-        fileprivate var maxCount: Double {
-            switch self {
-            case .stopwatch(let maxCount),
-                 .timer(let maxCount):
-                return Double(maxCount)
-            }
-        }
-        
-        fileprivate func minutes(from count: Double) -> Int {
-            switch self {
-            case .stopwatch:
-                Int(count) / 60
-            case .timer:
-                Int(maxCount - count) / 60
-            }
-        }
-        
-        fileprivate func seconds(from count: Double) -> Int {
-            switch self {
-            case .stopwatch:
-                Int(count) % 60
-            case .timer:
-                Int(maxCount - count) % 60
-            }
-        }
-    }
-    
-    let config: Config
+    @StateObject var viewModel: ClockFlipViewModel
+    @StateObject private var clockState: ClockState
     let animationDuration = 0.6
+    
+    init(config: ClockFlipViewModel.Config) {
+        let state = ClockState()
+        _clockState = StateObject(wrappedValue: state)
+        _viewModel = StateObject(wrappedValue: ClockFlipViewModel(config: config, clockState: state))
+    }
     
     var body: some View {
         ZStack {
@@ -73,15 +48,7 @@ struct ClockFlipViewUsage: View {
                 }
             }
             
-            ControlButtonsView(stop: $stop, count: $count)
-        }
-        .onReceive(timer) { _ in
-            guard !stop else { return }
-            guard config.maxCount > count else {
-                return
-            }
-            
-            count += 0.01
+            ControlButtonsView(clockState: viewModel.clockState)
         }
     }
     
@@ -94,8 +61,8 @@ struct ClockFlipViewUsage: View {
     
     private var minuteInterface: some View {
         HStack {
-            ClockFlipView(
-                value: .constant(minutes / 10),
+            NumberFlipView(
+                value: .constant(viewModel.minutes / 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
@@ -103,8 +70,8 @@ struct ClockFlipViewUsage: View {
                 background: backgroundColor,
                 animationDuration: animationDuration)
             
-            ClockFlipView(
-                value: .constant(minutes % 10),
+            NumberFlipView(
+                value: .constant(viewModel.minutes % 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
@@ -116,8 +83,8 @@ struct ClockFlipViewUsage: View {
     
     private var secondsInterface: some View {
         HStack {
-            ClockFlipView(
-                value: .constant(seconds / 10),
+            NumberFlipView(
+                value: .constant(viewModel.seconds / 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
@@ -125,8 +92,8 @@ struct ClockFlipViewUsage: View {
                 background: backgroundColor,
                 animationDuration: animationDuration)
             
-            ClockFlipView(
-                value: .constant(seconds % 10),
+            NumberFlipView(
+                value: .constant(viewModel.seconds % 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
@@ -134,18 +101,6 @@ struct ClockFlipViewUsage: View {
                 background: backgroundColor,
                 animationDuration: animationDuration)
         }
-    }
-    
-    @State private var count: Double = 0
-    @State private var stop = false
-    @State private var isMenuExpanded = false
-    
-    private var minutes: Int {
-        config.minutes(from: count)
-    }
-    
-    private var seconds: Int {
-        config.seconds(from: count)
     }
     
     private var size: CGSize {
@@ -178,8 +133,6 @@ struct ClockFlipViewUsage: View {
         }
     }
     
-    private let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
-    
     private func createSnow() -> VortexSystem {
         let system = VortexSystem(tags: ["circle"])
         system.position = [0.5, 0]
@@ -198,9 +151,5 @@ struct ClockFlipViewUsage: View {
 
 #Preview {
     ClockFlipViewUsage(config: .stopwatch(startTime: 100))
-        .preferredColorScheme(.light)
-}
-#Preview {
-    ClockFlipViewUsage(config: .timer(maxCountInSeconds: 100))
         .preferredColorScheme(.light)
 }
