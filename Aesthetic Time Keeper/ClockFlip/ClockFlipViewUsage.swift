@@ -87,24 +87,27 @@ struct ClockFlipViewUsage: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
+    private let foregroundColor: Color = .gray.opacity(0.9)
+    private let backgroundColor: Color = .primary
+    
     private var minuteInterface: some View {
         HStack {
             ClockFlipView(
-                value: .constant( minutes / 10),
+                value: .constant(minutes / 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: .indigo,
-                background: .primary,
+                foreground: foregroundColor,
+                background: backgroundColor,
                 animationDuration: animationDuration)
             
             ClockFlipView(
-                value: .constant( minutes % 10),
+                value: .constant(minutes % 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: .white,
-                background: .red,
+                foreground: foregroundColor,
+                background: backgroundColor,
                 animationDuration: animationDuration)
         }
     }
@@ -112,12 +115,12 @@ struct ClockFlipViewUsage: View {
     private var secondsInterface: some View {
         HStack {
             ClockFlipView(
-                value: .constant( seconds / 10),
+                value: .constant(seconds / 10),
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: .black,
-                background: .gray,
+                foreground: foregroundColor,
+                background: backgroundColor,
                 animationDuration: animationDuration)
             
             ClockFlipView(
@@ -125,8 +128,8 @@ struct ClockFlipViewUsage: View {
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: .white,
-                background: .red,
+                foreground: foregroundColor,
+                background: backgroundColor,
                 animationDuration: animationDuration)
         }
     }

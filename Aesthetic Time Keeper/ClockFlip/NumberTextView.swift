@@ -15,15 +15,14 @@ struct NumberTextView: View {
     var body: some View {
         ZStack {
             Text("\(value)")
-                .font(Font(UIFont.systemFont(ofSize: fontSize, weight: .init(0.9))))
+                .font(Font(UIFont.systemFont(ofSize: fontSize, weight: .init(0.5))))
                 .foregroundStyle(foreground)
-                .shadow(color: .white, radius: 2)
                 .lineLimit(1)
                 .drawingGroup()
             
             Rectangle()
                 .fill(.white)
-                .frame(height: 2)
+                .frame(height: 1.5)
                 .zIndex(10)
         }
     }
