@@ -9,12 +9,11 @@ import SwiftUI
 
 struct NumberFlipView: View {
     @Binding var value: Int
-    
+    var foreground: Color
+    var background: Color
     var size: CGSize
     var fontSize: CGFloat
     var cornerRadius: CGFloat
-    var foreground: Color
-    var background: Color
     var animationDuration: CGFloat
     var halfHeight: CGFloat {
         size.height * 0.5
@@ -79,10 +78,12 @@ struct NumberFlipView: View {
         }
         .frame(width: size.width, height: size.height)
         .onChange(of: value, initial: true) { oldValue, newValue in
+            updateCurrentValuePostAnimation = true
             currentValue = oldValue
             nextValue = newValue
             
             guard rotation == 0 else {
+                updateCurrentValuePostAnimation = false
                 currentValue = newValue
                 return
             }
@@ -93,10 +94,22 @@ struct NumberFlipView: View {
                 rotation = -180
             } completion: {
                 rotation = 0
+                guard updateCurrentValuePostAnimation else {
+                    updateCurrentValuePostAnimation = true
+                    return
+                }
+                
                 currentValue = newValue
             }
         }
     }
+    
+    // This is added because rotation moves back to 0 when update update the count to 0.
+    // At this point, I wasn't able to figure out why updating the value is making this mess.
+    // Blocking the update once rotation 0 is hit prevents the previous animation that is ongoing to
+    // complete and render a hude mess on the board, since we have already decided what the
+    // new value is.
+    @State var updateCurrentValuePostAnimation = true
 }
 
 fileprivate struct RotationModifier: ViewModifier, Animatable {
@@ -129,4 +142,9 @@ fileprivate struct RotationModifier: ViewModifier, Animatable {
                 .drawingGroup()
             }
     }
+}
+
+#Preview {
+    ClockFlipViewUsage(config: .stopwatch(startTime: 100))
+        .preferredColorScheme(.light)
 }

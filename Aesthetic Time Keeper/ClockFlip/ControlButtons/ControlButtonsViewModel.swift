@@ -15,11 +15,14 @@ final class ControlButtonsViewModel: ObservableObject {
     @Published var isMenuExpanded = false
     @Published var isStopped = false {
         didSet {
-            clockState.isStopped = isStopped
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                clockState.isStopped = isStopped
+            }
         }
     }
     let config: ControlButtonsViewConfig
-    @ObservedObject var clockState: ClockState
+    var clockState: ClockState
     
     // MARK: - Init
     
@@ -62,10 +65,3 @@ struct ControlButtonsViewConfig {
     static let `default` = ControlButtonsViewConfig(mainButton: 55)
 }
 
-// MARK: - Preview
-#Preview {
-    ControlButtonsView(
-        clockState: .init(),
-        config: ControlButtonsViewConfig(mainButton: 160)
-    )
-} 

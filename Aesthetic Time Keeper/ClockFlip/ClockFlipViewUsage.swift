@@ -50,55 +50,58 @@ struct ClockFlipViewUsage: View {
             
             ControlButtonsView(clockState: viewModel.clockState)
         }
+        .onChange(of: colorScheme, initial: true) {_, newColorScheme in
+            viewModel.updateColorScheme(newColorScheme)
+        }
     }
     
     // MARK: - Private
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.colorScheme) var colorScheme
     
-    private let foregroundColor: Color = .gray.opacity(0.9)
-    private let backgroundColor: Color = .primary
-    
+    @ViewBuilder
     private var minuteInterface: some View {
         HStack {
             NumberFlipView(
                 value: .constant(viewModel.minutes / 10),
+                foreground: viewModel.foregroundColor,
+                background: viewModel.backgroundColor,
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: foregroundColor,
-                background: backgroundColor,
                 animationDuration: animationDuration)
             
             NumberFlipView(
                 value: .constant(viewModel.minutes % 10),
+                foreground: viewModel.foregroundColor,
+                background: viewModel.backgroundColor,
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: foregroundColor,
-                background: backgroundColor,
                 animationDuration: animationDuration)
         }
     }
     
+    @ViewBuilder
     private var secondsInterface: some View {
         HStack {
             NumberFlipView(
                 value: .constant(viewModel.seconds / 10),
+                foreground: viewModel.foregroundColor,
+                background: viewModel.backgroundColor,
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: foregroundColor,
-                background: backgroundColor,
                 animationDuration: animationDuration)
             
             NumberFlipView(
                 value: .constant(viewModel.seconds % 10),
+                foreground: viewModel.foregroundColor,
+                background: viewModel.backgroundColor,
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
-                foreground: foregroundColor,
-                background: backgroundColor,
                 animationDuration: animationDuration)
         }
     }

@@ -4,12 +4,22 @@ import Combine
 class ClockState: ObservableObject {
     @Published var count: Double = 0
     @Published var isStopped = false
+    
+    func updateCount(by val: Double) {
+        count += val
+    }
+    
+    func resetCount() {
+        count = 0
+    }
 }
 
 class ClockFlipViewModel: ObservableObject {
     
     // MARK: - Internal
-    @ObservedObject var clockState: ClockState
+    var clockState: ClockState
+    var foregroundColor: Color = .gray.opacity(0.9)
+    var backgroundColor: Color = .primary
     
     var minutes: Int {
         config.minutes(from: clockState.count)
@@ -17,6 +27,11 @@ class ClockFlipViewModel: ObservableObject {
     
     var seconds: Int {
         config.seconds(from: clockState.count)
+    }
+    
+    func updateColorScheme(_ colorScheme: ColorScheme) {
+        foregroundColor = colorScheme == .dark ? .black.opacity(0.9) : .gray.opacity(0.9)
+        backgroundColor = colorScheme == .dark ? .primary : .primary
     }
     
     // MARK: - Init
@@ -39,7 +54,7 @@ class ClockFlipViewModel: ObservableObject {
                 guard let self,
                       !self.clockState.isStopped,
                       self.config.maxCount > self.clockState.count else { return }
-                self.clockState.count += 0.01
+                clockState.updateCount(by: 0.01)
             }
             .store(in: &cancellables)
     }

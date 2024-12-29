@@ -5,6 +5,9 @@ struct ControlButtonsView: View {
     @StateObject var viewModel: ControlButtonsViewModel
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
+    private let foreground = Color(.systemBackground)
+    private let background = Color(hex: "#EBB866")
+
     init(clockState: ClockState, 
          config: ControlButtonsViewConfig = .default) {
         _viewModel = StateObject(wrappedValue: ControlButtonsViewModel(
@@ -70,10 +73,10 @@ struct ControlButtonsView: View {
         } label: {
             Image(systemName: "stop.fill")
                 .font(.system(size: viewModel.config.popoutButtonFont))
-                .foregroundColor(Color(cgColor: UIColor.systemBackground.cgColor))
+                .foregroundColor(foreground)
                 .frame(width: viewModel.config.popoutButtonSize,
                        height: viewModel.config.popoutButtonSize)
-                .background(Color(cgColor: UIColor.label.cgColor))
+                .background(background)
                 .clipShape(Circle())
         }
         .offset(y: verticalSizeClass == .regular ? -viewModel.config.stopButtonOffset : 0)
@@ -91,10 +94,10 @@ struct ControlButtonsView: View {
         } label: {
             Image(systemName: viewModel.isStopped ? "play.fill" : "pause.fill")
                 .font(.system(size: viewModel.config.popoutButtonFont))
-                .foregroundColor(Color(cgColor: UIColor.systemBackground.cgColor))
+                .foregroundColor(foreground)
                 .frame(width: viewModel.config.popoutButtonSize,
                        height: viewModel.config.popoutButtonSize)
-                .background(Color(cgColor: UIColor.label.cgColor))
+                .background(background)
                 .clipShape(Circle())
         }
         .offset(y: verticalSizeClass == .regular ? -viewModel.config.playPauseButtonOffset : 0)
@@ -112,10 +115,10 @@ struct ControlButtonsView: View {
         } label: {
             Image(systemName: viewModel.isMenuExpanded ? "xmark.circle.fill" : "ellipsis.circle.fill")
                 .font(.system(size: viewModel.config.mainButtonFont))
-                .foregroundColor(.white)
+                .foregroundColor(foreground)
                 .frame(width: viewModel.config.mainButton,
                        height: viewModel.config.mainButton)
-                .background(Color.primary)
+                .background(background)
                 .clipShape(Circle())
                 .shadow(radius: 2)
                 .rotationEffect(.degrees(viewModel.isMenuExpanded ? 600 : 0))
@@ -129,6 +132,6 @@ struct ControlButtonsView: View {
 #Preview {
     ControlButtonsView(
         clockState: .init(),
-        config: ControlButtonsViewConfig(mainButton: 160)
+        config: ControlButtonsViewConfig(mainButton: 55)
     )
 } 
