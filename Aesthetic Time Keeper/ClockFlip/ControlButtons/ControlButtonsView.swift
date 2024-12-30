@@ -61,6 +61,7 @@ struct ControlButtonsView: View {
             if viewModel.isMenuExpanded {
                 stopButton
                 playPauseButton
+                settingsButton
             }
             mainMenuButton
         }
@@ -104,6 +105,27 @@ struct ControlButtonsView: View {
         .offset(x: verticalSizeClass == .regular ? 0 : -viewModel.config.playPauseButtonOffset)
         .transition(.asymmetric(
             insertion: .scale.animation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.05)),
+            removal: .scale
+        ))
+    }
+    
+    @ViewBuilder
+    private var settingsButton: some View {
+        Button {
+            viewModel.handleSettingsButtonAction()
+        } label: {
+            Image(systemName: "gear")
+                .font(.system(size: viewModel.config.popoutButtonFont))
+                .foregroundColor(foreground)
+                .frame(width: viewModel.config.popoutButtonSize,
+                       height: viewModel.config.popoutButtonSize)
+                .background(background)
+                .clipShape(Circle())
+        }
+        .offset(x: verticalSizeClass == .regular ? -viewModel.config.settingsButtonOffset : 0)
+        .offset(y: verticalSizeClass == .regular ? 0 : -viewModel.config.settingsButtonOffset)
+        .transition(.asymmetric(
+            insertion: .scale.animation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.03)),
             removal: .scale
         ))
     }

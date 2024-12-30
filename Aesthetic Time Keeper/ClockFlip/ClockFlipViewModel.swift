@@ -4,6 +4,7 @@ import Combine
 class ClockState: ObservableObject {
     @Published var count: Double = 0
     @Published var isStopped = false
+    @Published var showSettings = false
     
     func updateCount(by val: Double) {
         count += val

@@ -49,6 +49,10 @@ final class ControlButtonsViewModel: ObservableObject {
     func handlePlayPauseButtonAction() {
         isStopped.toggle()
     }
+    
+    func handleSettingsButtonAction() {
+        clockState.showSettings = true
+    }
 }
 
 // MARK: - Configuration
@@ -61,6 +65,7 @@ struct ControlButtonsViewConfig {
     var mainButtonFont: CGFloat { mainButton * 0.436 }
     var stopButtonOffset: CGFloat { mainButton * 2.2 }
     var playPauseButtonOffset: CGFloat { mainButton * 1.1 }
+    var settingsButtonOffset: CGFloat { mainButton * 1.1 }
     
     static let `default` = ControlButtonsViewConfig(mainButton: 55)
 }
