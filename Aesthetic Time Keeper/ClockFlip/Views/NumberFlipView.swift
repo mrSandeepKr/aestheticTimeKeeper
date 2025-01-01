@@ -144,7 +144,3 @@ fileprivate struct RotationModifier: ViewModifier, Animatable {
     }
 }
 
-#Preview {
-    ClockFlipViewUsage(config: .stopwatch(startTime: 100))
-        .preferredColorScheme(.light)
-}

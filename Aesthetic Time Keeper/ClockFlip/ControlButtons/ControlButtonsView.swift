@@ -149,11 +149,3 @@ struct ControlButtonsView: View {
         }
     }
 }
-
-// MARK: - Preview
-#Preview {
-    ControlButtonsView(
-        clockState: .init(),
-        config: ControlButtonsViewConfig(mainButton: 55)
-    )
-} 

@@ -12,12 +12,13 @@ import Vortex
 struct ClockFlipViewUsage: View {
     @StateObject var viewModel: ClockFlipViewModel
     @StateObject private var clockState: ClockState
+    @State private var sheetHeight: CGFloat = .zero
     let animationDuration = 0.6
     
-    init(config: ClockFlipViewModel.Config) {
+    init(config: ClockState.Config) {
         let state = ClockState()
         _clockState = StateObject(wrappedValue: state)
-        _viewModel = StateObject(wrappedValue: ClockFlipViewModel(config: config, clockState: state))
+        _viewModel = StateObject(wrappedValue: ClockFlipViewModel(clockState: state))
     }
     
     var body: some View {
@@ -53,6 +54,18 @@ struct ClockFlipViewUsage: View {
         .onChange(of: colorScheme, initial: true) {_, newColorScheme in
             viewModel.updateColorScheme(newColorScheme)
         }
+        .sheet(isPresented: $clockState.showSettings) {
+            SettingsView(clockState: viewModel.clockState)
+                .overlay {
+                    GeometryReader { geometry in
+                        Color.clear.preference(key: InnerHeightPreferenceKey.self, value: geometry.size.height)
+                    }
+                }
+                .onPreferenceChange(InnerHeightPreferenceKey.self) { newHeight in
+                    sheetHeight = newHeight
+                }
+                .presentationDetents([.height(sheetHeight)])
+        }
     }
     
     // MARK: - Private
@@ -62,7 +75,8 @@ struct ClockFlipViewUsage: View {
     
     @ViewBuilder
     private var minuteInterface: some View {
-        HStack {
+        HStack(alignment: .top) {
+            // First NumberFlipView
             NumberFlipView(
                 value: .constant(viewModel.minutes / 10),
                 foreground: viewModel.foregroundColor,
@@ -72,20 +86,33 @@ struct ClockFlipViewUsage: View {
                 cornerRadius: 10,
                 animationDuration: animationDuration)
             
-            NumberFlipView(
-                value: .constant(viewModel.minutes % 10),
-                foreground: viewModel.foregroundColor,
-                background: viewModel.backgroundColor,
-                size: size,
-                fontSize: fontSize,
-                cornerRadius: 10,
-                animationDuration: animationDuration)
+            // Second NumberFlipView with a trailing-aligned Text
+            VStack(alignment: .trailing, spacing: 0) {
+                // Top-aligned NumberFlipView
+                NumberFlipView(
+                    value: .constant(viewModel.minutes % 10),
+                    foreground: viewModel.foregroundColor,
+                    background: viewModel.backgroundColor,
+                    size: size,
+                    fontSize: fontSize,
+                    cornerRadius: 10,
+                    animationDuration: animationDuration)
+                
+                // Text aligned to the trailing edge
+                Text("min")
+                    .font(.headline)
+                    .bold()
+                    .foregroundColor(viewModel.backgroundColor)
+                    .padding(.top, 4)
+                    .padding(.trailing, 5)
+            }
         }
     }
     
     @ViewBuilder
     private var secondsInterface: some View {
-        HStack {
+        HStack(alignment: .top) {
+            // First NumberFlipView
             NumberFlipView(
                 value: .constant(viewModel.seconds / 10),
                 foreground: viewModel.foregroundColor,
@@ -95,14 +122,26 @@ struct ClockFlipViewUsage: View {
                 cornerRadius: 10,
                 animationDuration: animationDuration)
             
-            NumberFlipView(
-                value: .constant(viewModel.seconds % 10),
-                foreground: viewModel.foregroundColor,
-                background: viewModel.backgroundColor,
-                size: size,
-                fontSize: fontSize,
-                cornerRadius: 10,
-                animationDuration: animationDuration)
+            // Second NumberFlipView with a trailing-aligned Text
+            VStack(alignment: .trailing, spacing: 0) {
+                // Top-aligned NumberFlipView
+                NumberFlipView(
+                    value: .constant(viewModel.seconds % 10),
+                    foreground: viewModel.foregroundColor,
+                    background: viewModel.backgroundColor,
+                    size: size,
+                    fontSize: fontSize,
+                    cornerRadius: 10,
+                    animationDuration: animationDuration)
+                
+                // Text aligned to the trailing edge
+                Text("sec")
+                    .font(.headline)
+                    .bold()
+                    .foregroundColor(viewModel.backgroundColor)
+                    .padding(.top, 4)
+                    .padding(.trailing, 5)
+            }
         }
     }
     
@@ -155,4 +194,11 @@ struct ClockFlipViewUsage: View {
 #Preview {
     ClockFlipViewUsage(config: .stopwatch(startTime: 100))
         .preferredColorScheme(.light)
+}
+
+struct InnerHeightPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = .zero
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
 }

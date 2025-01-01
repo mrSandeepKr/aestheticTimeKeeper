@@ -52,6 +52,7 @@ final class ControlButtonsViewModel: ObservableObject {
     
     func handleSettingsButtonAction() {
         clockState.showSettings = true
+        toggleMenu()
     }
 }
 
