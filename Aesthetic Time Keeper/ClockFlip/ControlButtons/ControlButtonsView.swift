@@ -18,39 +18,17 @@ struct ControlButtonsView: View {
     
     var body: some View {
         mainContent
+            .ignoresSafeArea()
     }
     
     @ViewBuilder
     private var mainContent: some View {
-        if verticalSizeClass == .regular {
-            portraitLayout
-        } else {
-            landscapeLayout
-        }
-    }
-    
-    @ViewBuilder
-    private var portraitLayout: some View {
-        VStack {
-            Spacer()
-            HStack {
-                Spacer()
-                buttonMenu
-                    .padding(.bottom, 32)
-                    .padding(.trailing, 32)
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private var landscapeLayout: some View {
         HStack {
             Spacer()
             VStack {
                 Spacer()
                 buttonMenu
-                    .padding(.trailing, 32)
-                Spacer()
+                    .padding([.bottom, .trailing], 32)
             }
         }
     }
@@ -148,4 +126,9 @@ struct ControlButtonsView: View {
                           value: viewModel.isMenuExpanded)
         }
     }
+}
+
+#Preview {
+    ClockFlipViewUsage(config: .stopwatch(startTime: 100))
+        .preferredColorScheme(.light)
 }

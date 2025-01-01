@@ -37,6 +37,10 @@ struct SettingsView: View {
         clockState.showSettings = false
     }
     
+    private func dismiss() {
+        clockState.showSettings = false
+    }
+    
     var body: some View {
         VStack(spacing: 20) {
             HStack(spacing: 0) {
@@ -101,8 +105,22 @@ struct SettingsView: View {
                     )
             }
             .padding(.top, 20)
+            
+            Button(action: {
+                dismiss()
+            }) {
+                Text("Cancel")
+                    .font(.system(.title3, design: .rounded))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.black) // Warm brown text
+                    .frame(width: textFrameWidth * 1.2, height: 45)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(.white.opacity(0.9))
+                    )
+            }
         }
-        .padding(.top, 20)
+        .padding([.top, .bottom], 20)
         .onAppear {
             selectedMode =  {
                 switch clockState.config {

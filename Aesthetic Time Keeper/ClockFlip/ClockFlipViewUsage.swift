@@ -16,7 +16,7 @@ struct ClockFlipViewUsage: View {
     let animationDuration = 0.6
     
     init(config: ClockState.Config) {
-        let state = ClockState()
+        let state = ClockState(config: config)
         _clockState = StateObject(wrappedValue: state)
         _viewModel = StateObject(wrappedValue: ClockFlipViewModel(clockState: state))
     }
@@ -191,14 +191,14 @@ struct ClockFlipViewUsage: View {
     }
 }
 
-#Preview {
-    ClockFlipViewUsage(config: .stopwatch(startTime: 100))
-        .preferredColorScheme(.light)
-}
-
 struct InnerHeightPreferenceKey: PreferenceKey {
     static let defaultValue: CGFloat = .zero
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = nextValue()
     }
+}
+
+#Preview {
+    ClockFlipViewUsage(config: .timer(maxCountInSeconds: 100))
+        .preferredColorScheme(.light)
 }

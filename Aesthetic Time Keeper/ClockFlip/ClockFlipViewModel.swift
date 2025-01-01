@@ -15,6 +15,12 @@ class ClockState: ObservableObject {
         count = 0
     }
     
+    // MARK: - Init
+    
+    init(config: Config = .timer(maxCountInSeconds: 300)) {
+        self.config = config
+    }
+    
     // MARK: - Configuration
     
     enum Config {
