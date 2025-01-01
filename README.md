@@ -1,9 +1,8 @@
-# Aesthetic Time Keeper
+ # Aesthetic Time Keeper <img src="ReadmeResources/appIcon.png" alt="Aesthetic Time Keeper Screenshot 1" width="32" height="32">
 
 Aesthetic Time Keeper is an iOS application designed to help you manage your time efficiently with a beautiful and intuitive interface.
 
-![Aesthetic Time Keeper Screenshot 1](path/to/your/image1.png)
-![Aesthetic Time Keeper Screenshot 2](path/to/your/image2.png)
+
 
 ## Features
 
@@ -12,6 +11,8 @@ Aesthetic Time Keeper is an iOS application designed to help you manage your tim
 - Customizable themes
 - Detailed statistics and reports
 - Notifications and reminders
+
+<img src="ReadmeResources/thumbnail.png" alt="Aesthetic Time Keeper Screenshot 1" width="600" style="height: auto;">
 
 ## Installation
 
@@ -43,4 +44,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact
 
 For any questions or feedback, please contact [sandeep.kumar.ece16+github@itbhu.ac.in](sandeep.kumar.ece16+github@itbhu.ac.in).
-
