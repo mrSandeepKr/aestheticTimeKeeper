@@ -139,7 +139,6 @@ fileprivate struct RotationModifier: ViewModifier, Animatable {
                     }
                 }
                 .frame(width: size.width, height: size.height)
-                .drawingGroup()
             }
     }
 }

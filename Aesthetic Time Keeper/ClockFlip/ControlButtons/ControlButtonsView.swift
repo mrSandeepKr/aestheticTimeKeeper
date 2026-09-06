@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - View
 struct ControlButtonsView: View {
@@ -49,6 +50,7 @@ struct ControlButtonsView: View {
     private var stopButton: some View {
         Button {
             viewModel.handleStopButtonAction()
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
             Image(systemName: "stop.fill")
                 .font(.system(size: viewModel.config.popoutButtonFont))
@@ -70,6 +72,7 @@ struct ControlButtonsView: View {
     private var playPauseButton: some View {
         Button {
             viewModel.handlePlayPauseButtonAction()
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
             Image(systemName: viewModel.isStopped ? "play.fill" : "pause.fill")
                 .font(.system(size: viewModel.config.popoutButtonFont))
@@ -91,6 +94,7 @@ struct ControlButtonsView: View {
     private var settingsButton: some View {
         Button {
             viewModel.handleSettingsButtonAction()
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } label: {
             Image(systemName: "gear")
                 .font(.system(size: viewModel.config.popoutButtonFont))
@@ -125,6 +129,7 @@ struct ControlButtonsView: View {
                 .animation(.spring(response: 0.4, dampingFraction: 0.8),
                           value: viewModel.isMenuExpanded)
         }
+        .sensoryFeedback(.impact(weight: .light), trigger: viewModel.isMenuExpanded)
     }
 }
 

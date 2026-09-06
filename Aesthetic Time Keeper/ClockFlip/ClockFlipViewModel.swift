@@ -90,7 +90,7 @@ class ClockFlipViewModel: ObservableObject {
     
     // MARK: - Private
     
-    private let timer = Timer.publish(every: 0.01, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private var cancellables = Set<AnyCancellable>()
     
     private func setupTimer() {
@@ -99,7 +99,7 @@ class ClockFlipViewModel: ObservableObject {
                 guard let self,
                       !self.clockState.isStopped,
                       self.config.maxCount > self.clockState.count else { return }
-                clockState.updateCount(by: 0.01)
+                clockState.updateCount(by: 1)
             }
             .store(in: &cancellables)
     }

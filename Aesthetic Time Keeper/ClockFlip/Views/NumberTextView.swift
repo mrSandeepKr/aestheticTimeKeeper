@@ -18,7 +18,6 @@ struct NumberTextView: View {
                 .font(Font(UIFont.systemFont(ofSize: fontSize, weight: .init(0.5))))
                 .foregroundStyle(foreground)
                 .lineLimit(1)
-                .drawingGroup()
             
             Rectangle()
                 .fill(.white)
