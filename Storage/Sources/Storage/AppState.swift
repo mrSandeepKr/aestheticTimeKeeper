@@ -14,10 +14,4 @@ public final class AppState {
         self.timeSetting = timeSetting
         self.runningTimer = runningTimer
     }
-
-    public func discardExpiredRunningTimer(now: Date = .now) {
-        if let runningTimer, let endTime = runningTimer.endTime, endTime <= now {
-            self.runningTimer = nil
-        }
-    }
 }

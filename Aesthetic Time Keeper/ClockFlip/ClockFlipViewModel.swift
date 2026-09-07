@@ -1,32 +1,116 @@
 import SwiftUI
 import Combine
+import SwiftData
+import Storage
 
-class ClockState: ObservableObject {
+@MainActor
+final class ClockState: ObservableObject {
     @Published var count: Double = 0
     @Published var isStopped = true
     @Published var showSettings = false
-    @Published var config: Config = .stopwatch(startTime: 300)
-    
+
+    // ponytail: config derived from storage, not stored separately
+    var config: Config {
+        switch appState.timeSetting {
+        case .timer(let d): .timer(maxCountInSeconds: Int(d))
+        case .stopwatch(let d): .stopwatch(startTime: Int(d))
+        }
+    }
+
+    let modelContext: ModelContext
+    var appState: AppState
+
+    // MARK: - Init
+
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        let descriptor = FetchDescriptor<AppState>()
+        if let existing = try? modelContext.fetch(descriptor).first {
+            self.appState = existing
+        } else {
+            let state = AppState()
+            modelContext.insert(state)
+            try? modelContext.save()
+            self.appState = state
+        }
+        if appState.runningTimer != nil {
+            resume()
+        }
+    }
+
+    // MARK: - Timer
+
     func updateCount(by val: Double) {
         count += val
     }
-    
-    func resetCount() {
-        count = 0
+
+    // All timer control lives on AppState (storage); here we just mirror the result.
+
+    func startTimer() {
+        appState.startTimer()
+        refreshFromStorage()
     }
-    
-    // MARK: - Init
-    
-    init(config: Config = .timer(maxCountInSeconds: 300)) {
-        self.config = config
+
+    func pauseTimer() {
+        appState.pauseTimer()
+        refreshFromStorage()
     }
-    
+
+    func resumeTimer() {
+        appState.resumeTimer()
+        refreshFromStorage()
+    }
+
+    func togglePlayPause() {
+        appState.togglePlayPause()
+        refreshFromStorage()
+    }
+
+    func stopTimer() {
+        appState.stopTimer()
+        refreshFromStorage()
+    }
+
+    // MARK: - Settings
+
+    func apply(timeSetting: TimerSetting) {
+        appState.applyTimeSetting(timeSetting)
+        refreshFromStorage()
+        objectWillChange.send()
+    }
+
+    // MARK: - Private
+
+    private func resume() {
+        appState.discardExpiredRunningTimer()
+        refreshFromStorage()
+    }
+
+    /// Mirror the persisted timer into the display state (`count` is elapsed seconds, same
+    /// convention the ticker uses; `isStopped` = nothing running).
+    private func refreshFromStorage() {
+        guard let running = appState.runningTimer else {
+            count = 0
+            isStopped = true
+            return
+        }
+        count = displayCount(running: running)
+        isStopped = !running.isRunning
+    }
+
+    private func displayCount(running: RunningTimer) -> Double {
+        switch running {
+        case .stopwatch: running.liveValue()
+        case .timer: config.maxCount - running.liveValue()
+        }
+    }
+
     // MARK: - Configuration
-    
+
     enum Config {
         case timer(maxCountInSeconds: Int)
         case stopwatch(startTime: Int)
-        
+
         var maxCount: Double {
             switch self {
             case .stopwatch(let maxCount),
@@ -34,7 +118,7 @@ class ClockState: ObservableObject {
                 return Double(maxCount)
             }
         }
-        
+
         func minutes(from count: Double) -> Int {
             switch self {
             case .stopwatch:
@@ -43,7 +127,7 @@ class ClockState: ObservableObject {
                 Int(maxCount - count) / 60
             }
         }
-        
+
         func seconds(from count: Double) -> Int {
             switch self {
             case .stopwatch:
@@ -55,6 +139,7 @@ class ClockState: ObservableObject {
     }
 }
 
+@MainActor
 class ClockFlipViewModel: ObservableObject {
     
     // MARK: - Internal

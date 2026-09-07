@@ -8,19 +8,14 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 final class ControlButtonsViewModel: ObservableObject {
     
     // MARK: - Internal
     
     @Published var isMenuExpanded = false
-    @Published var isStopped = false {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                clockState.isStopped = isStopped
-            }
-        }
-    }
+    // Mirrors clockState.isStopped; storage methods own the authoritative value.
+    @Published var isStopped = false
     let config: ControlButtonsViewConfig
     var clockState: ClockState
     
@@ -42,12 +37,13 @@ final class ControlButtonsViewModel: ObservableObject {
     }
     
     func handleStopButtonAction() {
+        clockState.stopTimer()
         isStopped = true
-        clockState.count = 0
     }
     
     func handlePlayPauseButtonAction() {
-        isStopped.toggle()
+        clockState.togglePlayPause()
+        isStopped = clockState.isStopped
     }
     
     func handleSettingsButtonAction() {

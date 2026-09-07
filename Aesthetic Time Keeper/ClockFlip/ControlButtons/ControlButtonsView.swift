@@ -1,6 +1,8 @@
 import SwiftUI
+import SwiftData
 import UIKit
 import SharedUI
+import Storage
 
 // MARK: - View
 struct ControlButtonsView: View {
@@ -135,6 +137,6 @@ struct ControlButtonsView: View {
 }
 
 #Preview {
-    ClockFlipViewUsage(config: .stopwatch(startTime: 100))
+    ClockFlipViewUsage(modelContext: try! ModelContainer(for: AppState.self).mainContext)
         .preferredColorScheme(.light)
 }

@@ -7,8 +7,10 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 import Vortex
 import SharedUI
+import Storage
 
 struct ClockFlipViewUsage: View {
     @StateObject var viewModel: ClockFlipViewModel
@@ -16,8 +18,8 @@ struct ClockFlipViewUsage: View {
     @State private var sheetHeight: CGFloat = .zero
     let animationDuration = 0.6
     
-    init(config: ClockState.Config) {
-        let state = ClockState(config: config)
+    init(modelContext: ModelContext) {
+        let state = ClockState(modelContext: modelContext)
         _clockState = StateObject(wrappedValue: state)
         _viewModel = StateObject(wrappedValue: ClockFlipViewModel(clockState: state))
     }
@@ -200,6 +202,6 @@ struct InnerHeightPreferenceKey: PreferenceKey {
 }
 
 #Preview {
-    ClockFlipViewUsage(config: .timer(maxCountInSeconds: 100))
+    ClockFlipViewUsage(modelContext: try! ModelContainer(for: AppState.self).mainContext)
         .preferredColorScheme(.light)
 }

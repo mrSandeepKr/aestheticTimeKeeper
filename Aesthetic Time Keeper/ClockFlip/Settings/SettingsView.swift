@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import SwiftData
 import SharedUI
+import Storage
 
 struct SettingsView: View {
     @ObservedObject var clockState: ClockState
@@ -26,15 +28,15 @@ struct SettingsView: View {
     }
     
     private func doneTapped() {
-        clockState.config = {
+        let timeSetting: TimerSetting = {
             switch selectedMode {
             case .stopwatch:
-                return .stopwatch(startTime: minutes * 60)
+                .stopwatch(TimeInterval(minutes * 60))
             case .timer:
-                return .timer(maxCountInSeconds: minutes * 60)
+                .timer(TimeInterval(minutes * 60))
             }
         }()
-        clockState.resetCount()
+        clockState.apply(timeSetting: timeSetting)
         clockState.showSettings = false
     }
     
@@ -123,14 +125,14 @@ struct SettingsView: View {
         }
         .padding([.top, .bottom], 20)
         .onAppear {
-            selectedMode =  {
-                switch clockState.config {
-                case .timer:
-                    return .timer
-                case .stopwatch:
-                    return .stopwatch
-                }
-            }()
+            switch clockState.config {
+            case .timer(maxCountInSeconds: let seconds):
+                selectedMode = .timer
+                minutes = seconds / 60
+            case .stopwatch(startTime: let seconds):
+                selectedMode = .stopwatch
+                minutes = seconds / 60
+            }
         }
     }
     
@@ -151,11 +153,11 @@ enum TimerMode {
 }
 
 #Preview {
-    SettingsView(clockState: .init())
+    SettingsView(clockState: .init(modelContext: try! ModelContainer(for: AppState.self).mainContext))
 }
 
 
 #Preview {
-    ControlButtonsView(clockState: .init(),
+    ControlButtonsView(clockState: .init(modelContext: try! ModelContainer(for: AppState.self).mainContext),
                        config: .default)
 }
