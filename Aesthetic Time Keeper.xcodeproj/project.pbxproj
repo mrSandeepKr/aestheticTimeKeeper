@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6139B376304E70EC0051D3AA /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6139B377304E70EC0051D3AA /* SharedUI */; };
+		6139B420304E73040051D3AA /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 6139B421304E73040051D3AA /* Storage */; };
 		61E696032D2000C8007968B5 /* Vortex in Frameworks */ = {isa = PBXBuildFile; productRef = 61E696022D2000C8007968B5 /* Vortex */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 			files = (
 				61E696032D2000C8007968B5 /* Vortex in Frameworks */,
 				6139B376304E70EC0051D3AA /* SharedUI in Frameworks */,
+				6139B420304E73040051D3AA /* Storage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				61E696022D2000C8007968B5 /* Vortex */,
 				6139B377304E70EC0051D3AA /* SharedUI */,
+				6139B421304E73040051D3AA /* Storage */,
 			);
 			productName = "Aesthetic Time Keeper";
 			productReference = 61E695E12D1FFFFA007968B5 /* Aesthetic Time Keeper.app */;
@@ -106,6 +109,7 @@
 			packageReferences = (
 				61E696012D2000C8007968B5 /* XCRemoteSwiftPackageReference "Vortex" */,
 				6139B378304E70EC0051D3AA /* XCLocalSwiftPackageReference "SharedUI" */,
+				6139B422304E73040051D3AA /* XCLocalSwiftPackageReference "Storage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 61E695E22D1FFFFA007968B5 /* Products */;
@@ -358,6 +362,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = SharedUI;
 		};
+		6139B422304E73040051D3AA /* XCLocalSwiftPackageReference "Storage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Storage;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -376,6 +384,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6139B378304E70EC0051D3AA /* XCLocalSwiftPackageReference "SharedUI" */;
 			productName = SharedUI;
+		};
+		6139B421304E73040051D3AA /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6139B422304E73040051D3AA /* XCLocalSwiftPackageReference "Storage" */;
+			productName = Storage;
 		};
 		61E696022D2000C8007968B5 /* Vortex */ = {
 			isa = XCSwiftPackageProductDependency;
