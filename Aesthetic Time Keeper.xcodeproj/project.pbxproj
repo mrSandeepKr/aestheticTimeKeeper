@@ -9,14 +9,62 @@
 /* Begin PBXBuildFile section */
 		6139B376304E70EC0051D3AA /* SharedUI in Frameworks */ = {isa = PBXBuildFile; productRef = 6139B377304E70EC0051D3AA /* SharedUI */; };
 		6139B420304E73040051D3AA /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 6139B421304E73040051D3AA /* Storage */; };
+		6139B4F6304E96E30051D3AA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6139B4F5304E96E30051D3AA /* WidgetKit.framework */; };
+		6139B4F8304E96E30051D3AA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6139B4F7304E96E30051D3AA /* SwiftUI.framework */; };
+		6139B507304E96E40051D3AA /* TimeKeeperWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6139B4F3304E96E30051D3AA /* TimeKeeperWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61E696032D2000C8007968B5 /* Vortex in Frameworks */ = {isa = PBXBuildFile; productRef = 61E696022D2000C8007968B5 /* Vortex */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		6139B505304E96E40051D3AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 61E695D92D1FFFFA007968B5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6139B4F2304E96E30051D3AA;
+			remoteInfo = TimeKeeperWidgetsExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6139B50C304E96E40051D3AA /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6139B507304E96E40051D3AA /* TimeKeeperWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		6139B4F3304E96E30051D3AA /* TimeKeeperWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TimeKeeperWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6139B4F5304E96E30051D3AA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		6139B4F7304E96E30051D3AA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		61E695E12D1FFFFA007968B5 /* Aesthetic Time Keeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Aesthetic Time Keeper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		6139B508304E96E40051D3AA /* Exceptions for "TimeKeeperWidgets" folder in "TimeKeeperWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6139B4F2304E96E30051D3AA /* TimeKeeperWidgetsExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		6139B4F9304E96E30051D3AA /* TimeKeeperWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				6139B508304E96E40051D3AA /* Exceptions for "TimeKeeperWidgets" folder in "TimeKeeperWidgetsExtension" target */,
+			);
+			path = TimeKeeperWidgets;
+			sourceTree = "<group>";
+		};
 		61E695E32D1FFFFA007968B5 /* Aesthetic Time Keeper */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Aesthetic Time Keeper";
@@ -25,6 +73,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		6139B4F0304E96E30051D3AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6139B4F8304E96E30051D3AA /* SwiftUI.framework in Frameworks */,
+				6139B4F6304E96E30051D3AA /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61E695DE2D1FFFFA007968B5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -38,10 +95,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6139B4F4304E96E30051D3AA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6139B4F5304E96E30051D3AA /* WidgetKit.framework */,
+				6139B4F7304E96E30051D3AA /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		61E695D82D1FFFFA007968B5 = {
 			isa = PBXGroup;
 			children = (
 				61E695E32D1FFFFA007968B5 /* Aesthetic Time Keeper */,
+				6139B4F9304E96E30051D3AA /* TimeKeeperWidgets */,
+				6139B4F4304E96E30051D3AA /* Frameworks */,
 				61E695E22D1FFFFA007968B5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				61E695E12D1FFFFA007968B5 /* Aesthetic Time Keeper.app */,
+				6139B4F3304E96E30051D3AA /* TimeKeeperWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,6 +126,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		6139B4F2304E96E30051D3AA /* TimeKeeperWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6139B509304E96E40051D3AA /* Build configuration list for PBXNativeTarget "TimeKeeperWidgetsExtension" */;
+			buildPhases = (
+				6139B4EF304E96E30051D3AA /* Sources */,
+				6139B4F0304E96E30051D3AA /* Frameworks */,
+				6139B4F1304E96E30051D3AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				6139B4F9304E96E30051D3AA /* TimeKeeperWidgets */,
+			);
+			name = TimeKeeperWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = TimeKeeperWidgetsExtension;
+			productReference = 6139B4F3304E96E30051D3AA /* TimeKeeperWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		61E695E02D1FFFFA007968B5 /* Aesthetic Time Keeper */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61E695F22D1FFFFB007968B5 /* Build configuration list for PBXNativeTarget "Aesthetic Time Keeper" */;
@@ -64,10 +155,12 @@
 				61E695DD2D1FFFFA007968B5 /* Sources */,
 				61E695DE2D1FFFFA007968B5 /* Frameworks */,
 				61E695DF2D1FFFFA007968B5 /* Resources */,
+				6139B50C304E96E40051D3AA /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6139B506304E96E40051D3AA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				61E695E32D1FFFFA007968B5 /* Aesthetic Time Keeper */,
@@ -89,9 +182,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					6139B4F2304E96E30051D3AA = {
+						CreatedOnToolsVersion = 26.5;
+					};
 					61E695E02D1FFFFA007968B5 = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -117,11 +213,19 @@
 			projectRoot = "";
 			targets = (
 				61E695E02D1FFFFA007968B5 /* Aesthetic Time Keeper */,
+				6139B4F2304E96E30051D3AA /* TimeKeeperWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6139B4F1304E96E30051D3AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61E695DF2D1FFFFA007968B5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -132,6 +236,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		6139B4EF304E96E30051D3AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61E695DD2D1FFFFA007968B5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -141,7 +252,80 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		6139B506304E96E40051D3AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6139B4F2304E96E30051D3AA /* TimeKeeperWidgetsExtension */;
+			targetProxy = 6139B505304E96E40051D3AA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		6139B50A304E96E40051D3AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5PGJSL3NV4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeKeeperWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TimeKeeperWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sandeepKr.practice.Aesthetic-Time-Keeper.TimeKeeperWidgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6139B50B304E96E40051D3AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5PGJSL3NV4;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeKeeperWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TimeKeeperWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sandeepKr.practice.Aesthetic-Time-Keeper.TimeKeeperWidgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		61E695F02D1FFFFB007968B5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -337,6 +521,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6139B509304E96E40051D3AA /* Build configuration list for PBXNativeTarget "TimeKeeperWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6139B50A304E96E40051D3AA /* Debug */,
+				6139B50B304E96E40051D3AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		61E695DC2D1FFFFA007968B5 /* Build configuration list for PBXProject "Aesthetic Time Keeper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
