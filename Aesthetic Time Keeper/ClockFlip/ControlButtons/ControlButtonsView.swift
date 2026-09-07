@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import SharedUI
 
 // MARK: - View
 struct ControlButtonsView: View {
@@ -7,7 +8,7 @@ struct ControlButtonsView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     private let foreground = Color(.systemBackground)
-    private let background = Color(hex: "#EBB866")
+    private let background = AestheticColor.warmGold
 
     init(clockState: ClockState, 
          config: ControlButtonsViewConfig = .default) {

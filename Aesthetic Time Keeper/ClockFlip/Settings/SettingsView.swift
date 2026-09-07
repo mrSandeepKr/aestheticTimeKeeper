@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SharedUI
 
 struct SettingsView: View {
     @ObservedObject var clockState: ClockState
@@ -101,7 +102,7 @@ struct SettingsView: View {
                     .frame(width: textFrameWidth * 1.2, height: 45)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(hex: "FFE5B4"))
+                            .fill(AestheticColor.warmBrown)
                     )
             }
             .padding(.top, 20)

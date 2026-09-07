@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Vortex
+import SharedUI
 
 struct ClockFlipViewUsage: View {
     @StateObject var viewModel: ClockFlipViewModel

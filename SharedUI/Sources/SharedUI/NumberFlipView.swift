@@ -1,29 +1,34 @@
-//
-//  ClockFlip.swift
-//  AnimationsPracticeSwiftUI
-//
-//  Created by Sandeep Kumar on 22/12/24.
-//
-
 import SwiftUI
 
-struct NumberFlipView: View {
-    @Binding var value: Int
-    var foreground: Color
-    var background: Color
-    var size: CGSize
-    var fontSize: CGFloat
-    var cornerRadius: CGFloat
-    var animationDuration: CGFloat
+public struct NumberFlipView: View {
+    @Binding public var value: Int
+    public var foreground: Color
+    public var background: Color
+    public var size: CGSize
+    public var fontSize: CGFloat
+    public var cornerRadius: CGFloat
+    public var animationDuration: CGFloat
+
+    public init(value: Binding<Int>, foreground: Color, background: Color, size: CGSize, fontSize: CGFloat, cornerRadius: CGFloat, animationDuration: CGFloat) {
+        self._value = value
+        self.foreground = foreground
+        self.background = background
+        self.size = size
+        self.fontSize = fontSize
+        self.cornerRadius = cornerRadius
+        self.animationDuration = animationDuration
+    }
+
     var halfHeight: CGFloat {
         size.height * 0.5
     }
-    
+
     @State private var nextValue: Int = 1
     @State private var currentValue: Int = 0
     @State private var rotation: CGFloat = 0
-    
-    var body: some View {
+    @State private var updateCurrentValuePostAnimation = true
+
+    public var body: some View {
         ZStack {
             // Behind view
             UnevenRoundedRectangle(topLeadingRadius: cornerRadius,
@@ -38,7 +43,7 @@ struct NumberFlipView: View {
             })
             .clipped()
             .frame(maxHeight: .infinity, alignment: .top)
-            
+
             // View which you see rotating
             UnevenRoundedRectangle(topLeadingRadius: cornerRadius,
                                    bottomLeadingRadius : 0,
@@ -61,7 +66,7 @@ struct NumberFlipView: View {
                               perspective: 0.4)
             .frame (maxHeight: .infinity, alignment: .top)
             .zIndex(10)
-            
+
             // Bottom View
             UnevenRoundedRectangle(topLeadingRadius: 0,
                                    bottomLeadingRadius: cornerRadius,
@@ -81,14 +86,14 @@ struct NumberFlipView: View {
             updateCurrentValuePostAnimation = true
             currentValue = oldValue
             nextValue = newValue
-            
+
             guard rotation == 0 else {
                 updateCurrentValuePostAnimation = false
                 currentValue = newValue
                 return
             }
             guard oldValue != newValue else { return }
-            
+
             withAnimation(.easeInOut(duration: animationDuration),
                           completionCriteria: .logicallyComplete) {
                 rotation = -180
@@ -98,33 +103,27 @@ struct NumberFlipView: View {
                     updateCurrentValuePostAnimation = true
                     return
                 }
-                
+
                 currentValue = newValue
             }
         }
     }
-    
-    // This is added because rotation moves back to 0 when update update the count to 0.
-    // At this point, I wasn't able to figure out why updating the value is making this mess.
-    // Blocking the update once rotation 0 is hit prevents the previous animation that is ongoing to
-    // complete and render a hude mess on the board, since we have already decided what the
-    // new value is.
-    @State var updateCurrentValuePostAnimation = true
 }
 
-fileprivate struct RotationModifier: ViewModifier, Animatable {
+@MainActor
+fileprivate struct RotationModifier: ViewModifier, @preconcurrency Animatable {
     var rotation: CGFloat
     var currentValue: Int
     var nextValue: Int
     var fontSize: CGFloat
     var foreground: Color
     var size: CGSize
-    
+
     var animatableData: CGFloat {
         get { rotation }
         set { rotation = newValue }
     }
-    
+
     func body(content: Content) -> some View {
         content
             .overlay(alignment: .top) {
@@ -142,4 +141,3 @@ fileprivate struct RotationModifier: ViewModifier, Animatable {
             }
     }
 }
-

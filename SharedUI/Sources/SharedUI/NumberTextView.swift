@@ -1,24 +1,23 @@
-//
-//  NumberTextView.swift
-//  AnimationsPracticeSwiftUI
-//
-//  Created by Sandeep Kumar on 28/12/24.
-//
-
 import SwiftUI
 
-struct NumberTextView: View {
+public struct NumberTextView: View {
     let value: Int
     let fontSize: CGFloat
     let foreground: Color
-    
-    var body: some View {
+
+    public init(value: Int, fontSize: CGFloat, foreground: Color) {
+        self.value = value
+        self.fontSize = fontSize
+        self.foreground = foreground
+    }
+
+    public var body: some View {
         ZStack {
             Text("\(value)")
-                .font(Font(UIFont.systemFont(ofSize: fontSize, weight: .init(0.5))))
+                .font(Font.system(size: fontSize, weight: .medium))
                 .foregroundStyle(foreground)
                 .lineLimit(1)
-            
+
             Rectangle()
                 .fill(.white)
                 .frame(height: 1.5)
