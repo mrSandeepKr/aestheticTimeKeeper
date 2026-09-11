@@ -11,6 +11,7 @@
 		6139B420304E73040051D3AA /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 6139B421304E73040051D3AA /* Storage */; };
 		6139B4F6304E96E30051D3AA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6139B4F5304E96E30051D3AA /* WidgetKit.framework */; };
 		6139B4F8304E96E30051D3AA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6139B4F7304E96E30051D3AA /* SwiftUI.framework */; };
+		6139B50D304E96E40051D3AA /* Storage in Frameworks (TimeKeeperWidgets) */ = {isa = PBXBuildFile; productRef = 6139B50E304E96E40051D3AA /* Storage */; };
 		6139B507304E96E40051D3AA /* TimeKeeperWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6139B4F3304E96E30051D3AA /* TimeKeeperWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61E696032D2000C8007968B5 /* Vortex in Frameworks */ = {isa = PBXBuildFile; productRef = 61E696022D2000C8007968B5 /* Vortex */; };
 /* End PBXBuildFile section */
@@ -77,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6139B50D304E96E40051D3AA /* Storage in Frameworks (TimeKeeperWidgets) */,
 				6139B4F8304E96E30051D3AA /* SwiftUI.framework in Frameworks */,
 				6139B4F6304E96E30051D3AA /* WidgetKit.framework in Frameworks */,
 			);
@@ -143,6 +145,7 @@
 			);
 			name = TimeKeeperWidgetsExtension;
 			packageProductDependencies = (
+				6139B50E304E96E40051D3AA /* Storage */,
 			);
 			productName = TimeKeeperWidgetsExtension;
 			productReference = 6139B4F3304E96E30051D3AA /* TimeKeeperWidgetsExtension.appex */;
@@ -266,6 +269,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TimeKeeperWidgets/TimeKeeperWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5PGJSL3NV4;
@@ -273,6 +277,7 @@
 				INFOPLIST_FILE = TimeKeeperWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TimeKeeperWidgets;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -298,6 +303,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TimeKeeperWidgets/TimeKeeperWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5PGJSL3NV4;
@@ -305,6 +311,7 @@
 				INFOPLIST_FILE = TimeKeeperWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TimeKeeperWidgets;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -453,6 +460,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -492,6 +500,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -579,6 +588,11 @@
 			productName = SharedUI;
 		};
 		6139B421304E73040051D3AA /* Storage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6139B422304E73040051D3AA /* XCLocalSwiftPackageReference "Storage" */;
+			productName = Storage;
+		};
+		6139B50E304E96E40051D3AA /* Storage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 6139B422304E73040051D3AA /* XCLocalSwiftPackageReference "Storage" */;
 			productName = Storage;

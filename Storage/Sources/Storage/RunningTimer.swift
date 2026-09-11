@@ -18,6 +18,11 @@ public enum RunningTimer: Codable, Equatable, Sendable {
 
     public var isRunning: Bool { startedAt != nil }
 
+    public var isTimerMode: Bool {
+        if case .timer = self { return true }
+        return false
+    }
+
     /// Seconds remaining (timer) or elapsed (stopwatch) at `now`.
     public func liveValue(now: Date = .now) -> TimeInterval {
         switch self {

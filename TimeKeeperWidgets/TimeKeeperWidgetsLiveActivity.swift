@@ -1,80 +1,171 @@
-//
-//  TimeKeeperWidgetsLiveActivity.swift
-//  TimeKeeperWidgets
-//
-//  Created by Sandeep Kumar on 07/09/26.
-//
-
 import ActivityKit
 import WidgetKit
 import SwiftUI
+import AppIntents
+import Storage
 
-struct TimeKeeperWidgetsAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
-    }
+// MARK: - Live Activity Widget
 
-    // Fixed non-changing properties about your activity go here!
-    var name: String
-}
-
-struct TimeKeeperWidgetsLiveActivity: Widget {
+struct TimeKeeperLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: TimeKeeperWidgetsAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
-            }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
+        ActivityConfiguration(for: TimeKeeperAttributes.self) { context in
+            // Lock Screen / Banner view
+            lockScreenView(context: context)
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
+                // Expanded region — full flipper display + controls
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    VStack {
+                        TimerModeIcon(mode: context.attributes.name == "stopwatch" ? "stopwatch" : "countdown")
+                        Spacer()
+                    }
+                    .padding(.top, 8)
+                    .padding(.leading, 4)
                 }
+
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    // Status badge
+                    VStack {
+                        Circle()
+                            .fill(context.state.isRunning ? .green : .orange)
+                            .frame(width: 8, height: 8)
+                        Spacer()
+                    }
+                    .padding(.top, 8)
+                    .padding(.trailing, 4)
                 }
+
+                DynamicIslandExpandedRegion(.center) {
+                    FlipperTimerDisplay(
+                        minutes: context.state.displayMinutes,
+                        seconds: context.state.displaySeconds,
+                        digitWidth: 28,
+                        digitHeight: 36
+                    )
+                    .padding(.top, 4)
+                }
+
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    HStack(spacing: 20) {
+                        Button(intent: PauseResumeTimerIntent()) {
+                            HStack(spacing: 6) {
+                                Image(systemName: context.state.isRunning ? "pause.fill" : "play.fill")
+                                    .font(.system(size: 12, weight: .bold))
+                                Text(context.state.isRunning ? "Pause" : "Resume")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                        }
+
+                        Button(intent: StopTimerIntent()) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "stop.fill")
+                                    .font(.system(size: 12, weight: .bold))
+                                Text("Stop")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Capsule())
+                        }
+                    }
+                    .padding(.bottom, 6)
                 }
             } compactLeading: {
-                Text("L")
+                // Compact leading — mode icon
+                TimerModeIcon(mode: context.attributes.name == "stopwatch" ? "stopwatch" : "countdown")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                // Compact trailing — MM:SS text
+                Text("\(String(format: "%02d", context.state.displayMinutes)):\(String(format: "%02d", context.state.displaySeconds))")
+                    .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(.white)
             } minimal: {
-                Text(context.state.emoji)
+                // Minimal — just the mode icon
+                TimerModeIcon(mode: context.attributes.name == "stopwatch" ? "stopwatch" : "countdown")
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
+            .keylineTint(.white.opacity(0.3))
         }
     }
-}
 
-extension TimeKeeperWidgetsAttributes {
-    fileprivate static var preview: TimeKeeperWidgetsAttributes {
-        TimeKeeperWidgetsAttributes(name: "World")
+    // MARK: - Lock Screen View
+
+    @ViewBuilder
+    private func lockScreenView(context: ActivityViewContext<TimeKeeperAttributes>) -> some View {
+        ZStack {
+            Color.black.opacity(0.9)
+
+            HStack(spacing: 12) {
+                // Mode icon
+                Image(systemName: context.attributes.name == "stopwatch" ? "stopwatch" : "timer")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.7))
+
+                // Flipper display
+                FlipperTimerDisplay(
+                    minutes: context.state.displayMinutes,
+                    seconds: context.state.displaySeconds,
+                    digitWidth: 22,
+                    digitHeight: 30
+                )
+
+                Spacer()
+
+                // Status indicator
+                if context.state.isRunning {
+                    HStack(spacing: 4) {
+                        Circle()
+                            .fill(.green)
+                            .frame(width: 6, height: 6)
+                        Text("Running")
+                            .font(.caption2)
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
+                } else {
+                    HStack(spacing: 4) {
+                        Circle()
+                            .fill(.orange)
+                            .frame(width: 6, height: 6)
+                        Text("Paused")
+                            .font(.caption2)
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+        }
+        .activityBackgroundTint(.black)
+        .activitySystemActionForegroundColor(.white)
     }
 }
 
-extension TimeKeeperWidgetsAttributes.ContentState {
-    fileprivate static var smiley: TimeKeeperWidgetsAttributes.ContentState {
-        TimeKeeperWidgetsAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: TimeKeeperWidgetsAttributes.ContentState {
-         TimeKeeperWidgetsAttributes.ContentState(emoji: "🤩")
-     }
+// MARK: - Previews
+
+extension TimeKeeperAttributes {
+    fileprivate static var preview: TimeKeeperAttributes {
+        TimeKeeperAttributes(name: "countdown")
+    }
 }
 
-#Preview("Notification", as: .content, using: TimeKeeperWidgetsAttributes.preview) {
-   TimeKeeperWidgetsLiveActivity()
+extension TimeKeeperAttributes.ContentState {
+    fileprivate static var running: TimeKeeperAttributes.ContentState {
+        TimeKeeperAttributes.ContentState(displayMinutes: 4, displaySeconds: 32, isRunning: true, timerMode: "countdown")
+    }
+
+    fileprivate static var paused: TimeKeeperAttributes.ContentState {
+        TimeKeeperAttributes.ContentState(displayMinutes: 2, displaySeconds: 15, isRunning: false, timerMode: "countdown")
+    }
+}
+
+#Preview("Notification", as: .content, using: TimeKeeperAttributes.preview) {
+    TimeKeeperLiveActivity()
 } contentStates: {
-    TimeKeeperWidgetsAttributes.ContentState.smiley
-    TimeKeeperWidgetsAttributes.ContentState.starEyes
+    TimeKeeperAttributes.ContentState.running
+    TimeKeeperAttributes.ContentState.paused
 }
