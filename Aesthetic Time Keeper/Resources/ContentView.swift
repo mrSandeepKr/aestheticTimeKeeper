@@ -12,7 +12,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
 
     var body: some View {
-        ClockFlipViewUsage(modelContext: modelContext)
+        ClockFlipView(modelContext: modelContext)
     }
 }
 

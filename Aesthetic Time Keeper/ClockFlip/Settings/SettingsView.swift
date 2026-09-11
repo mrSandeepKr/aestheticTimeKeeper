@@ -11,7 +11,7 @@ import SharedUI
 import Storage
 
 struct SettingsView: View {
-    @ObservedObject var clockState: ClockState
+    let clockState: ClockState
     @State private var minutes: Int = 5
     @State private var selectedMode: TimerMode = .timer
     private let minMinutes = 5

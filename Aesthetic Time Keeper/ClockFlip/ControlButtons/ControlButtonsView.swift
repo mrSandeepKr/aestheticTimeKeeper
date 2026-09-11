@@ -6,18 +6,18 @@ import Storage
 
 // MARK: - View
 struct ControlButtonsView: View {
-    @StateObject var viewModel: ControlButtonsViewModel
+    @State private var isMenuExpanded = false
+    let clockState: ClockState
+    let config: ControlButtonsViewConfig
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     private let foreground = Color(.systemBackground)
     private let background = AestheticColor.warmGold
 
-    init(clockState: ClockState, 
+    init(clockState: ClockState,
          config: ControlButtonsViewConfig = .default) {
-        _viewModel = StateObject(wrappedValue: ControlButtonsViewModel(
-            clockState: clockState,
-            config: config
-        ))
+        self.clockState = clockState
+        self.config = config
     }
     
     var body: some View {
@@ -40,7 +40,7 @@ struct ControlButtonsView: View {
     @ViewBuilder
     private var buttonMenu: some View {
         ZStack {
-            if viewModel.isMenuExpanded {
+            if isMenuExpanded {
                 stopButton
                 playPauseButton
                 settingsButton
@@ -52,19 +52,19 @@ struct ControlButtonsView: View {
     @ViewBuilder
     private var stopButton: some View {
         Button {
-            viewModel.handleStopButtonAction()
+            clockState.stopTimer()
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
             Image(systemName: "stop.fill")
-                .font(.system(size: viewModel.config.popoutButtonFont))
+                .font(.system(size: config.popoutButtonFont))
                 .foregroundColor(foreground)
-                .frame(width: viewModel.config.popoutButtonSize,
-                       height: viewModel.config.popoutButtonSize)
+                .frame(width: config.popoutButtonSize,
+                       height: config.popoutButtonSize)
                 .background(background)
                 .clipShape(Circle())
         }
-        .offset(y: verticalSizeClass == .regular ? -viewModel.config.stopButtonOffset : 0)
-        .offset(x: verticalSizeClass == .regular ? 0 : -viewModel.config.stopButtonOffset)
+        .offset(y: verticalSizeClass == .regular ? -config.stopButtonOffset : 0)
+        .offset(x: verticalSizeClass == .regular ? 0 : -config.stopButtonOffset)
         .transition(.asymmetric(
             insertion: .scale.animation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.01)),
             removal: .scale
@@ -74,19 +74,19 @@ struct ControlButtonsView: View {
     @ViewBuilder
     private var playPauseButton: some View {
         Button {
-            viewModel.handlePlayPauseButtonAction()
+            clockState.togglePlayPause()
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
-            Image(systemName: viewModel.isStopped ? "play.fill" : "pause.fill")
-                .font(.system(size: viewModel.config.popoutButtonFont))
+            Image(systemName: clockState.isStopped ? "play.fill" : "pause.fill")
+                .font(.system(size: config.popoutButtonFont))
                 .foregroundColor(foreground)
-                .frame(width: viewModel.config.popoutButtonSize,
-                       height: viewModel.config.popoutButtonSize)
+                .frame(width: config.popoutButtonSize,
+                       height: config.popoutButtonSize)
                 .background(background)
                 .clipShape(Circle())
         }
-        .offset(y: verticalSizeClass == .regular ? -viewModel.config.playPauseButtonOffset : 0)
-        .offset(x: verticalSizeClass == .regular ? 0 : -viewModel.config.playPauseButtonOffset)
+        .offset(y: verticalSizeClass == .regular ? -config.playPauseButtonOffset : 0)
+        .offset(x: verticalSizeClass == .regular ? 0 : -config.playPauseButtonOffset)
         .transition(.asymmetric(
             insertion: .scale.animation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.05)),
             removal: .scale
@@ -96,19 +96,20 @@ struct ControlButtonsView: View {
     @ViewBuilder
     private var settingsButton: some View {
         Button {
-            viewModel.handleSettingsButtonAction()
+            clockState.showSettings = true
+            toggleMenu()
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } label: {
             Image(systemName: "gear")
-                .font(.system(size: viewModel.config.popoutButtonFont))
+                .font(.system(size: config.popoutButtonFont))
                 .foregroundColor(foreground)
-                .frame(width: viewModel.config.popoutButtonSize,
-                       height: viewModel.config.popoutButtonSize)
+                .frame(width: config.popoutButtonSize,
+                       height: config.popoutButtonSize)
                 .background(background)
                 .clipShape(Circle())
         }
-        .offset(x: verticalSizeClass == .regular ? -viewModel.config.settingsButtonOffset : 0)
-        .offset(y: verticalSizeClass == .regular ? 0 : -viewModel.config.settingsButtonOffset)
+        .offset(x: verticalSizeClass == .regular ? -config.settingsButtonOffset : 0)
+        .offset(y: verticalSizeClass == .regular ? 0 : -config.settingsButtonOffset)
         .transition(.asymmetric(
             insertion: .scale.animation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.03)),
             removal: .scale
@@ -118,25 +119,46 @@ struct ControlButtonsView: View {
     @ViewBuilder
     private var mainMenuButton: some View {
         Button {
-            viewModel.toggleMenu()
+            toggleMenu()
         } label: {
-            Image(systemName: viewModel.isMenuExpanded ? "xmark.circle.fill" : "ellipsis.circle.fill")
-                .font(.system(size: viewModel.config.mainButtonFont))
+            Image(systemName: isMenuExpanded ? "xmark.circle.fill" : "ellipsis.circle.fill")
+                .font(.system(size: config.mainButtonFont))
                 .foregroundColor(foreground)
-                .frame(width: viewModel.config.mainButton,
-                       height: viewModel.config.mainButton)
+                .frame(width: config.mainButton,
+                       height: config.mainButton)
                 .background(background)
                 .clipShape(Circle())
                 .shadow(radius: 2)
-                .rotationEffect(.degrees(viewModel.isMenuExpanded ? 600 : 0))
+                .rotationEffect(.degrees(isMenuExpanded ? 600 : 0))
                 .animation(.spring(response: 0.4, dampingFraction: 0.8),
-                          value: viewModel.isMenuExpanded)
+                          value: isMenuExpanded)
         }
-        .sensoryFeedback(.impact(weight: .light), trigger: viewModel.isMenuExpanded)
+        .sensoryFeedback(.impact(weight: .light), trigger: isMenuExpanded)
+    }
+    
+    private func toggleMenu() {
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+            isMenuExpanded.toggle()
+        }
     }
 }
 
+// MARK: - Configuration
+
+struct ControlButtonsViewConfig {
+    let mainButton: CGFloat
+    
+    var popoutButtonSize: CGFloat { mainButton * 0.85 }
+    var popoutButtonFont: CGFloat { popoutButtonSize * 0.436 }
+    var mainButtonFont: CGFloat { mainButton * 0.436 }
+    var stopButtonOffset: CGFloat { mainButton * 2.2 }
+    var playPauseButtonOffset: CGFloat { mainButton * 1.1 }
+    var settingsButtonOffset: CGFloat { mainButton * 1.1 }
+    
+    static let `default` = ControlButtonsViewConfig(mainButton: 55)
+}
+
 #Preview {
-    ClockFlipViewUsage(modelContext: try! ModelContainer(for: AppState.self).mainContext)
+    ClockFlipView(modelContext: try! ModelContainer(for: AppState.self).mainContext)
         .preferredColorScheme(.light)
 }

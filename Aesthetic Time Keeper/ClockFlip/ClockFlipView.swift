@@ -1,6 +1,6 @@
 //
-//  FlipClockUsage.swift
-//  AnimationsPracticeSwiftUI
+//  ClockFlipView.swift
+//  AestheticTimeKeeper
 //
 //  Created by Sandeep Kumar on 28/12/24.
 //
@@ -12,16 +12,15 @@ import Vortex
 import SharedUI
 import Storage
 
-struct ClockFlipViewUsage: View {
-    @StateObject var viewModel: ClockFlipViewModel
-    @StateObject private var clockState: ClockState
+struct ClockFlipView: View {
+    @State private var clockState: ClockState
     @State private var sheetHeight: CGFloat = .zero
     let animationDuration = 0.6
     
     init(modelContext: ModelContext) {
         let state = ClockState(modelContext: modelContext)
-        _clockState = StateObject(wrappedValue: state)
-        _viewModel = StateObject(wrappedValue: ClockFlipViewModel(clockState: state))
+        _clockState = State(initialValue: state)
+        LiveActivityManager.observe(state)
     }
     
     var body: some View {
@@ -52,13 +51,10 @@ struct ClockFlipViewUsage: View {
                 }
             }
             
-            ControlButtonsView(clockState: viewModel.clockState)
+            ControlButtonsView(clockState: clockState)
         }
-        .onChange(of: colorScheme, initial: true) {_, newColorScheme in
-            viewModel.updateColorScheme(newColorScheme)
-        }
-        .sheet(isPresented: $clockState.showSettings) {
-            SettingsView(clockState: viewModel.clockState)
+        .sheet(isPresented: Bindable(clockState).showSettings) {
+            SettingsView(clockState: clockState)
                 .overlay {
                     GeometryReader { geometry in
                         Color.clear.preference(key: InnerHeightPreferenceKey.self, value: geometry.size.height)
@@ -76,14 +72,18 @@ struct ClockFlipViewUsage: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.colorScheme) var colorScheme
     
+    private var foreground: Color {
+        colorScheme == .dark ? .black.opacity(0.9) : .gray.opacity(0.9)
+    }
+    
     @ViewBuilder
     private var minuteInterface: some View {
         HStack(alignment: .top) {
             // First NumberFlipView
             NumberFlipView(
-                value: .constant(viewModel.minutes / 10),
-                foreground: viewModel.foregroundColor,
-                background: viewModel.backgroundColor,
+                value: .constant(clockState.minutes / 10),
+                foreground: foreground,
+                background: .primary,
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
@@ -93,9 +93,9 @@ struct ClockFlipViewUsage: View {
             VStack(alignment: .trailing, spacing: 0) {
                 // Top-aligned NumberFlipView
                 NumberFlipView(
-                    value: .constant(viewModel.minutes % 10),
-                    foreground: viewModel.foregroundColor,
-                    background: viewModel.backgroundColor,
+                    value: .constant(clockState.minutes % 10),
+                    foreground: foreground,
+                    background: .primary,
                     size: size,
                     fontSize: fontSize,
                     cornerRadius: 10,
@@ -105,7 +105,7 @@ struct ClockFlipViewUsage: View {
                 Text("min")
                     .font(.headline)
                     .bold()
-                    .foregroundColor(viewModel.backgroundColor)
+                    .foregroundColor(.primary)
                     .padding(.top, 4)
                     .padding(.trailing, 5)
             }
@@ -117,9 +117,9 @@ struct ClockFlipViewUsage: View {
         HStack(alignment: .top) {
             // First NumberFlipView
             NumberFlipView(
-                value: .constant(viewModel.seconds / 10),
-                foreground: viewModel.foregroundColor,
-                background: viewModel.backgroundColor,
+                value: .constant(clockState.seconds / 10),
+                foreground: foreground,
+                background: .primary,
                 size: size,
                 fontSize: fontSize,
                 cornerRadius: 10,
@@ -129,9 +129,9 @@ struct ClockFlipViewUsage: View {
             VStack(alignment: .trailing, spacing: 0) {
                 // Top-aligned NumberFlipView
                 NumberFlipView(
-                    value: .constant(viewModel.seconds % 10),
-                    foreground: viewModel.foregroundColor,
-                    background: viewModel.backgroundColor,
+                    value: .constant(clockState.seconds % 10),
+                    foreground: foreground,
+                    background: .primary,
                     size: size,
                     fontSize: fontSize,
                     cornerRadius: 10,
@@ -141,7 +141,7 @@ struct ClockFlipViewUsage: View {
                 Text("sec")
                     .font(.headline)
                     .bold()
-                    .foregroundColor(viewModel.backgroundColor)
+                    .foregroundColor(.primary)
                     .padding(.top, 4)
                     .padding(.trailing, 5)
             }
@@ -202,6 +202,6 @@ struct InnerHeightPreferenceKey: PreferenceKey {
 }
 
 #Preview {
-    ClockFlipViewUsage(modelContext: try! ModelContainer(for: AppState.self).mainContext)
+    ClockFlipView(modelContext: try! ModelContainer(for: AppState.self).mainContext)
         .preferredColorScheme(.light)
 }
