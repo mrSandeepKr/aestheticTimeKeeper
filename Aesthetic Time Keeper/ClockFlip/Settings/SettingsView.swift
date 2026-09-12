@@ -15,7 +15,7 @@ struct SettingsView: View {
     @State private var minutes: Int = 5
     @State private var selectedMode: TimerMode = .timer
     private let minMinutes = 5
-    private let maxMinutes = 90
+    private let maxMinutes = TimerSetting.maxMinutes
     private let interval = 5
     
     private let buttonFontSize: CGFloat = 60

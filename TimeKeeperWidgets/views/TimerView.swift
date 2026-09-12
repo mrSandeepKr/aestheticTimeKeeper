@@ -1,15 +1,9 @@
 import SwiftUI
 import Storage
+import SharedUI
 
 // MARK: - Timer view
 
-/// The single timer look used on the Lock Screen, the expanded Dynamic Island,
-/// and the compact trailing edge. Each surface passes its own `Config` for sizing;
-/// the visual is identical everywhere.
-///
-/// Running → the dark card wraps the system-ticked timer text
-/// (`Text(timerInterval:)` / `Text(date, style: .timer)`), so the OS ticks the digits
-/// with zero app updates. Paused → the same card with the frozen MM:SS.
 struct TimerView: View {
     let state: TimeKeeperAttributes.ContentState
     let config: Config
@@ -20,21 +14,37 @@ struct TimerView: View {
         let padding: CGFloat
         let minHeight: CGFloat
         let minTextWidth: CGFloat
+        let showsProgress: Bool
     }
 
     var body: some View {
-        timerText
+        content
             .font(.system(size: config.fontSize, weight: .semibold, design: .monospaced))
             .monospacedDigit()
             .foregroundStyle(.white)
             .lineLimit(1)
             .frame(width: config.minTextWidth, alignment: .center)
-            .frame(height: config.minHeight, alignment: .center)
+            .frame(minHeight: config.minHeight, alignment: .center)
             .padding(.horizontal, config.padding)
             .background(
                 RoundedRectangle(cornerRadius: config.cornerRadius)
                     .fill(.black.opacity(0.85))
             )
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        // Countdown drains to the end; a stopwatch fills toward its configured
+        // max. Both only render with a known total.
+        if config.showsProgress,
+           let total = state.runningTimer.total, total > 0 {
+            VStack(spacing: 4) {
+                timerText
+                TimerProgressView(state: state)
+            }
+        } else {
+            timerText
+        }
     }
 
     @ViewBuilder
@@ -46,7 +56,11 @@ struct TimerView: View {
         if running.isRunning, let end = running.endTime {
             Text(timerInterval: Date.now...end, countsDown: true, showsHours: false)
         } else if running.isRunning, let start = running.startedAt {
-            Text(timerInterval: start...Date.distantFuture, countsDown: false, showsHours: false)
+            // Stopwatch: OS ticks this up from the interval's lower bound. Anchor it
+            // at the virtual zero (`startedAt - elapsed`); `startedAt` moves forward
+            // on every resume, so anchoring at it resets the display to 0:00.
+            let zero = start.addingTimeInterval(-running.liveValue(now: start))
+            Text(timerInterval: zero...Date.distantFuture, countsDown: false, showsHours: false)
         } else {
             let value = Int(running.liveValue())
             Text(String(format: "%d:%02d", value / 60, value % 60))
@@ -55,7 +69,7 @@ struct TimerView: View {
 }
 
 extension TimerView.Config {
-    static let island = TimerView.Config(fontSize: 22, cornerRadius: 10, padding: 14, minHeight: 42, minTextWidth: 68)
-    static let lockScreen = TimerView.Config(fontSize: 20, cornerRadius: 8, padding: 12, minHeight: 36, minTextWidth: 62)
-    static let compact = TimerView.Config(fontSize: 13, cornerRadius: 6, padding: 8, minHeight: 26, minTextWidth: 41)
+    static let island = TimerView.Config(fontSize: 22, cornerRadius: 10, padding: 14, minHeight: 42, minTextWidth: 68, showsProgress: false)
+    static let lockScreen = TimerView.Config(fontSize: 20, cornerRadius: 8, padding: 12, minHeight: 36, minTextWidth: 62, showsProgress: true)
+    static let compact = TimerView.Config(fontSize: 13, cornerRadius: 6, padding: 8, minHeight: 26, minTextWidth: 41, showsProgress: false)
 }

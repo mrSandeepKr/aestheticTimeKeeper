@@ -57,9 +57,9 @@ extension AppState {
     private func startTimer(now: Date) {
         switch timeSetting {
         case .timer(let duration):
-            runningTimer = .timer(remaining: duration, startedAt: now)
-        case .stopwatch:
-            runningTimer = .stopwatch(elapsed: 0, startedAt: now)
+            runningTimer = .timer(remaining: duration, startedAt: now, total: duration)
+        case .stopwatch(let duration):
+            runningTimer = .stopwatch(elapsed: 0, startedAt: now, total: duration)
         }
         save()
     }

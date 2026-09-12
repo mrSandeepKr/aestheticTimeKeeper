@@ -31,7 +31,6 @@ struct TimeKeeperLiveActivity: Widget {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
-        .background(Color.black.opacity(0.9))
         .activityBackgroundTint(.black)
     }
 
@@ -63,6 +62,16 @@ struct TimeKeeperLiveActivity: Widget {
                 TimerView(state: context.state, config: .island)
                     .padding(.top, 4)
             }
+
+            DynamicIslandExpandedRegion(.bottom) {
+                // Countdown: OS-driven bar, drains in sync with the digits. Stopwatch:
+                // static fill toward its configured max, refreshed on state pushes.
+                // No bar when no total.
+                if let total = context.state.runningTimer.total, total > 0 {
+                    TimerProgressView(state: context.state)
+                        .padding(.horizontal, 6)
+                }
+            }
         } compactLeading: {
             TimerIconView(mode: context.attributes.name == "stopwatch" ? "stopwatch" : "countdown")
         } compactTrailing: {
@@ -84,15 +93,34 @@ extension TimeKeeperAttributes {
 
 extension TimeKeeperAttributes.ContentState {
     fileprivate static var running: TimeKeeperAttributes.ContentState {
-        TimeKeeperAttributes.ContentState(runningTimer: .timer(remaining: 4 * 60 + 32, startedAt: .now))
+        TimeKeeperAttributes.ContentState(
+            runningTimer: .timer(remaining: 4 * 60 + 32, startedAt: .now, total: 5 * 60)
+        )
     }
 
     fileprivate static var paused: TimeKeeperAttributes.ContentState {
-        TimeKeeperAttributes.ContentState(runningTimer: .timer(remaining: 2 * 60 + 15, startedAt: nil))
+        // 2:15 left of a 5:00 countdown — the frozen bar sits at 45%.
+        TimeKeeperAttributes.ContentState(
+            runningTimer: .timer(remaining: 2 * 60 + 15, startedAt: nil, total: 5 * 60)
+        )
     }
 }
 
 #Preview("Lock Screen", as: .content, using: TimeKeeperAttributes.preview) {
+    TimeKeeperLiveActivity()
+} contentStates: {
+    TimeKeeperAttributes.ContentState.running
+    TimeKeeperAttributes.ContentState.paused
+}
+
+#Preview("Dynamic Island Expanded", as: .dynamicIsland(.expanded), using: TimeKeeperAttributes.preview) {
+    TimeKeeperLiveActivity()
+} contentStates: {
+    TimeKeeperAttributes.ContentState.running
+    TimeKeeperAttributes.ContentState.paused
+}
+
+#Preview("Dynamic Island Compact", as: .dynamicIsland(.compact), using: TimeKeeperAttributes.preview) {
     TimeKeeperLiveActivity()
 } contentStates: {
     TimeKeeperAttributes.ContentState.running

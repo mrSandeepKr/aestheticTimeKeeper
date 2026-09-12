@@ -63,8 +63,10 @@ final class ClockState {
         // discarded even if the app never re-renders. Idle → no work.
         heartbeatTask = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(1))
                 guard let self, !Task.isCancelled else { return }
+                let delay = self.nextTickDelay()
+                try? await Task.sleep(for: .seconds(delay))
+                guard !Task.isCancelled else { return }
                 self.tick()
             }
         }
@@ -91,6 +93,14 @@ final class ClockState {
     // MARK: - Private
 
     private var heartbeatTask: Task<Void, Never>?
+
+    private func nextTickDelay() -> TimeInterval {
+        guard let startedAt = appState.runningTimer?.startedAt else { return 1 }
+        let start = startedAt.timeIntervalSince1970
+        let now = Date.now.timeIntervalSince1970
+        let next = start + (now - start).rounded(.down) + 1
+        return max(next - now, 0.05)
+    }
 
     private func tick() {
         guard appState.runningTimer != nil else { return }
