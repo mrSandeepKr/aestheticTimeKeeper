@@ -100,7 +100,7 @@ struct SettingsView: View {
                 Text("Done")
                     .font(.system(.title3, design: .rounded))
                     .fontWeight(.semibold)
-                    .foregroundColor(.black) // Warm brown text
+                    .foregroundColor(.black)
                     .frame(width: textFrameWidth * 1.2, height: 45)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
@@ -115,7 +115,7 @@ struct SettingsView: View {
                 Text("Cancel")
                     .font(.system(.title3, design: .rounded))
                     .fontWeight(.semibold)
-                    .foregroundColor(.black) // Warm brown text
+                    .foregroundColor(.black)
                     .frame(width: textFrameWidth * 1.2, height: 45)
                     .background(
                         RoundedRectangle(cornerRadius: 12)

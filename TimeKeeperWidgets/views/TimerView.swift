@@ -19,7 +19,6 @@ struct TimerView: View {
         let cornerRadius: CGFloat
         let padding: CGFloat
         let minHeight: CGFloat
-        /// Width reserved for the widest value ("0:00:00") so digits never shift layout.
         let minTextWidth: CGFloat
     }
 
@@ -40,15 +39,17 @@ struct TimerView: View {
 
     @ViewBuilder
     private var timerText: some View {
+        let running = state.runningTimer
         // All three branches render the same digital MM:SS format.
         // The system timer text does NOT zero-pad minutes ("4:32", "90:00" with
         // showsHours: false) — the paused string must match that exactly.
-        if state.isRunning, let end = state.endDate {
+        if running.isRunning, let end = running.endTime {
             Text(timerInterval: Date.now...end, countsDown: true, showsHours: false)
-        } else if state.isRunning, let start = state.startDate {
+        } else if running.isRunning, let start = running.startedAt {
             Text(timerInterval: start...Date.distantFuture, countsDown: false, showsHours: false)
         } else {
-            Text(String(format: "%d:%02d", state.displayMinutes, state.displaySeconds))
+            let value = Int(running.liveValue())
+            Text(String(format: "%d:%02d", value / 60, value % 60))
         }
     }
 }

@@ -25,9 +25,9 @@ struct TimeKeeperLiveActivity: Widget {
 
             Spacer()
 
-            Text(context.state.isRunning ? "Running" : "Paused")
+            Text(context.state.runningTimer.isRunning ? "Running" : "Paused")
                 .font(.caption2)
-                .foregroundStyle(context.state.isRunning ? .green : .orange)
+                .foregroundStyle(context.state.runningTimer.isRunning ? .green : .orange)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -51,7 +51,7 @@ struct TimeKeeperLiveActivity: Widget {
             DynamicIslandExpandedRegion(.trailing) {
                 VStack {
                     Circle()
-                        .fill(context.state.isRunning ? .green : .orange)
+                        .fill(context.state.runningTimer.isRunning ? .green : .orange)
                         .frame(width: 8, height: 8)
                     Spacer()
                 }
@@ -84,25 +84,11 @@ extension TimeKeeperAttributes {
 
 extension TimeKeeperAttributes.ContentState {
     fileprivate static var running: TimeKeeperAttributes.ContentState {
-        TimeKeeperAttributes.ContentState(
-            displayMinutes: 4,
-            displaySeconds: 32,
-            endDate: Date().addingTimeInterval(4 * 60 + 32),
-            startDate: nil,
-            isRunning: true,
-            timerMode: "countdown"
-        )
+        TimeKeeperAttributes.ContentState(runningTimer: .timer(remaining: 4 * 60 + 32, startedAt: .now))
     }
 
     fileprivate static var paused: TimeKeeperAttributes.ContentState {
-        TimeKeeperAttributes.ContentState(
-            displayMinutes: 2,
-            displaySeconds: 15,
-            endDate: nil,
-            startDate: nil,
-            isRunning: false,
-            timerMode: "countdown"
-        )
+        TimeKeeperAttributes.ContentState(runningTimer: .timer(remaining: 2 * 60 + 15, startedAt: nil))
     }
 }
 

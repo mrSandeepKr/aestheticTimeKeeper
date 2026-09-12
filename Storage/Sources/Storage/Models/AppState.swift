@@ -6,11 +6,7 @@ public final class AppState {
     public var timeSetting: TimerSetting
     public var runningTimer: RunningTimer?
 
-    public init() {
-        self.timeSetting = .timer(300)
-    }
-
-    public init(timeSetting: TimerSetting, runningTimer: RunningTimer? = nil) {
+    public init(timeSetting: TimerSetting = .timer(300), runningTimer: RunningTimer? = nil) {
         self.timeSetting = timeSetting
         self.runningTimer = runningTimer
     }

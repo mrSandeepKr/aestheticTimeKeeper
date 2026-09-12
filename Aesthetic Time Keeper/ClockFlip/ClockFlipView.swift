@@ -20,7 +20,6 @@ struct ClockFlipView: View {
     init(modelContext: ModelContext) {
         let state = ClockState(modelContext: modelContext)
         _clockState = State(initialValue: state)
-        LiveActivityManager.observe(state)
     }
     
     var body: some View {
@@ -79,7 +78,6 @@ struct ClockFlipView: View {
     @ViewBuilder
     private var minuteInterface: some View {
         HStack(alignment: .top) {
-            // First NumberFlipView
             NumberFlipView(
                 value: .constant(clockState.minutes / 10),
                 foreground: foreground,
@@ -88,10 +86,8 @@ struct ClockFlipView: View {
                 fontSize: fontSize,
                 cornerRadius: 10,
                 animationDuration: animationDuration)
-            
-            // Second NumberFlipView with a trailing-aligned Text
+
             VStack(alignment: .trailing, spacing: 0) {
-                // Top-aligned NumberFlipView
                 NumberFlipView(
                     value: .constant(clockState.minutes % 10),
                     foreground: foreground,
@@ -100,8 +96,7 @@ struct ClockFlipView: View {
                     fontSize: fontSize,
                     cornerRadius: 10,
                     animationDuration: animationDuration)
-                
-                // Text aligned to the trailing edge
+
                 Text("min")
                     .font(.headline)
                     .bold()
@@ -115,7 +110,6 @@ struct ClockFlipView: View {
     @ViewBuilder
     private var secondsInterface: some View {
         HStack(alignment: .top) {
-            // First NumberFlipView
             NumberFlipView(
                 value: .constant(clockState.seconds / 10),
                 foreground: foreground,
@@ -124,10 +118,8 @@ struct ClockFlipView: View {
                 fontSize: fontSize,
                 cornerRadius: 10,
                 animationDuration: animationDuration)
-            
-            // Second NumberFlipView with a trailing-aligned Text
+
             VStack(alignment: .trailing, spacing: 0) {
-                // Top-aligned NumberFlipView
                 NumberFlipView(
                     value: .constant(clockState.seconds % 10),
                     foreground: foreground,
@@ -136,8 +128,7 @@ struct ClockFlipView: View {
                     fontSize: fontSize,
                     cornerRadius: 10,
                     animationDuration: animationDuration)
-                
-                // Text aligned to the trailing edge
+
                 Text("sec")
                     .font(.headline)
                     .bold()

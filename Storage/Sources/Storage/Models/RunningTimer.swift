@@ -3,7 +3,7 @@ import Foundation
 /// A timer in flight. The durable facts are stored (remaining/elapsed); the wall-clock
 /// anchor (`startedAt`) lets the live value keep advancing while the app is away.
 /// Non-nil `startedAt` IS the running state — `isRunning` is derived, never stored.
-public enum RunningTimer: Codable, Equatable, Sendable {
+public enum RunningTimer: Codable, Hashable, Sendable {
     /// Countdown: `remaining` seconds left at `startedAt` (advances against wall clock while running).
     case timer(remaining: TimeInterval, startedAt: Date?)
     /// Stopwatch: `elapsed` seconds accumulated at `startedAt` (grows against wall clock while running).
@@ -19,8 +19,7 @@ public enum RunningTimer: Codable, Equatable, Sendable {
     public var isRunning: Bool { startedAt != nil }
 
     public var isTimerMode: Bool {
-        if case .timer = self { return true }
-        return false
+        if case .timer = self { true } else { false }
     }
 
     /// Seconds remaining (timer) or elapsed (stopwatch) at `now`.

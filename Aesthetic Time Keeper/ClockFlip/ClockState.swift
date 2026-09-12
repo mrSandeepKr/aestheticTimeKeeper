@@ -11,7 +11,7 @@ import Storage
 ///
 /// Consumers:
 ///   - UI renders `minutes` / `seconds` / `isStopped` / `config`
-///   - `LiveActivityManager.observe(clockState)` manages the Live Activity
+///   - `LiveActivityManager.observe(modelContext:)` manages the Live Activity
 ///
 /// Every consumer reads the same object, so they can never disagree.
 @MainActor
@@ -41,7 +41,7 @@ final class ClockState {
     var seconds: Int { config.seconds(from: count) }
 
     let modelContext: ModelContext
-    var appState: AppState
+    private(set) var appState: AppState
 
     // MARK: - Init
 
@@ -59,8 +59,8 @@ final class ClockState {
         appState.discardExpiredRunningTimer()
         publish()
 
-        // Heartbeat: tick every second so running timers advance and mailbox
-        // commands get applied. Idle + no command → no work.
+        // Heartbeat: tick every second so a countdown that hits zero gets
+        // discarded even if the app never re-renders. Idle → no work.
         heartbeatTask = Task { [weak self] in
             while !Task.isCancelled {
                 try? await Task.sleep(for: .seconds(1))
@@ -93,39 +93,23 @@ final class ClockState {
     private var heartbeatTask: Task<Void, Never>?
 
     private func tick() {
-        guard processPendingCommands() || appState.runningTimer != nil else { return }
+        guard appState.runningTimer != nil else { return }
         appState.discardExpiredRunningTimer()
         publish()
-    }
-
-    /// Drain the widget mailbox. Returns true if a command was applied.
-    private func processPendingCommands() -> Bool {
-        guard let command = AppGroup.consumePendingCommand() else { return false }
-        switch command {
-        case "toggle":
-            // No timer alive = activity should have ended already; ignore.
-            guard appState.runningTimer != nil else { return false }
-            appState.togglePlayPause()
-        case "stop":
-            appState.stopTimer()
-        default:
-            return false
-        }
-        return true
     }
 
     /// Copy the persisted state into the observable surface.
     private func publish() {
         runningTimer = appState.runningTimer
         count = displayCount(running: runningTimer)
-        isStopped = !(runningTimer?.isRunning ?? false)
+        isStopped = runningTimer?.isRunning != true
     }
 
     private func displayCount(running: RunningTimer?) -> Double {
         guard let running else { return 0 }
-        switch running {
-        case .stopwatch: return running.liveValue()
-        case .timer: return config.maxCount - running.liveValue()
+        return switch running {
+        case .stopwatch: running.liveValue()
+        case .timer: config.maxCount - running.liveValue()
         }
     }
 }
@@ -139,7 +123,7 @@ extension ClockState {
             switch self {
             case .stopwatch(let maxCount),
                  .timer(let maxCount):
-                return Double(maxCount)
+                Double(maxCount)
             }
         }
 

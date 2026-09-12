@@ -4,21 +4,12 @@ import Foundation
 
 /// ActivityKit attributes shared by the app (publisher) and the widget (renderer).
 public struct TimeKeeperAttributes: ActivityAttributes {
+    /// The timer itself — the widget derives everything else from it.
     public struct ContentState: Codable, Hashable, Sendable {
-        public var displayMinutes: Int
-        public var displaySeconds: Int
-        public var endDate: Date?
-        public var startDate: Date?
-        public var isRunning: Bool
-        public var timerMode: String
+        public var runningTimer: RunningTimer
 
-        public init(displayMinutes: Int, displaySeconds: Int, endDate: Date?, startDate: Date?, isRunning: Bool, timerMode: String) {
-            self.displayMinutes = displayMinutes
-            self.displaySeconds = displaySeconds
-            self.endDate = endDate
-            self.startDate = startDate
-            self.isRunning = isRunning
-            self.timerMode = timerMode
+        public init(runningTimer: RunningTimer) {
+            self.runningTimer = runningTimer
         }
     }
 

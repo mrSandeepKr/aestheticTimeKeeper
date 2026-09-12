@@ -22,6 +22,10 @@ let package = Package(
         .target(
             name: "Storage"
         ),
+        .testTarget(
+            name: "StorageTests",
+            dependencies: ["Storage"]
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
