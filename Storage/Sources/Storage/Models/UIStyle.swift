@@ -14,5 +14,6 @@ public enum TimerStyle: String, Codable, CaseIterable, Sendable {
 /// Same contract as `TimerStyle`, dispatched by `backgroundView(_:)`.
 public enum ClockBackground: String, Codable, CaseIterable, Sendable {
     case snow
+    case starNest
     case plain
 }
