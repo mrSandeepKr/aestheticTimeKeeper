@@ -44,6 +44,7 @@ struct ControlButtonsView: View {
                 stopButton
                 playPauseButton
                 settingsButton
+                appearanceButton
             }
             mainMenuButton
         }
@@ -115,6 +116,29 @@ struct ControlButtonsView: View {
             removal: .scale
         ))
     }
+
+    @ViewBuilder
+    private var appearanceButton: some View {
+        Button {
+            clockState.showAppearance = true
+            toggleMenu()
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        } label: {
+            Image(systemName: "paintpalette.fill")
+                .font(.system(size: config.popoutButtonFont))
+                .foregroundColor(foreground)
+                .frame(width: config.popoutButtonSize,
+                       height: config.popoutButtonSize)
+                .background(background)
+                .clipShape(Circle())
+        }
+        .offset(x: verticalSizeClass == .regular ? -config.appearanceButtonOffset : 0)
+        .offset(y: verticalSizeClass == .regular ? 0 : -config.appearanceButtonOffset)
+        .transition(.asymmetric(
+            insertion: .scale.animation(.spring(response: 0.3, dampingFraction: 0.6).delay(0.04)),
+            removal: .scale
+        ))
+    }
     
     @ViewBuilder
     private var mainMenuButton: some View {
@@ -153,7 +177,8 @@ struct ControlButtonsViewConfig {
     var mainButtonFont: CGFloat { mainButton * 0.436 }
     var stopButtonOffset: CGFloat { mainButton * 2.2 }
     var playPauseButtonOffset: CGFloat { mainButton * 1.1 }
-    var settingsButtonOffset: CGFloat { mainButton * 1.1 }
+    var settingsButtonOffset: CGFloat { mainButton * 2.2 }
+    var appearanceButtonOffset: CGFloat { mainButton * 1.1 }
     
     static let `default` = ControlButtonsViewConfig(mainButton: 55)
 }

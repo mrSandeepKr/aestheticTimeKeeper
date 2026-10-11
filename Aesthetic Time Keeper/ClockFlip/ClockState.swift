@@ -27,7 +27,10 @@ final class ClockState {
     /// convention for both modes.
     private(set) var count: Double = 0
     private(set) var isStopped = true
+    private(set) var timerStyle: TimerStyle = .flipClock
+    private(set) var backgroundStyle: ClockBackground = .snow
     var showSettings = false
+    var showAppearance = false
 
     // ponytail: config derived from storage, not stored separately
     var config: Config {
@@ -90,6 +93,18 @@ final class ClockState {
         publish()
     }
 
+    func setTimerStyle(_ style: TimerStyle) {
+        appState.timerStyle = style
+        try? modelContext.save()
+        publish()
+    }
+
+    func setBackgroundStyle(_ style: ClockBackground) {
+        appState.backgroundStyle = style
+        try? modelContext.save()
+        publish()
+    }
+
     // MARK: - Private
 
     private var heartbeatTask: Task<Void, Never>?
@@ -113,6 +128,8 @@ final class ClockState {
         runningTimer = appState.runningTimer
         count = displayCount(running: runningTimer)
         isStopped = runningTimer?.isRunning != true
+        timerStyle = appState.timerStyle
+        backgroundStyle = appState.backgroundStyle
     }
 
     private func displayCount(running: RunningTimer?) -> Double {
