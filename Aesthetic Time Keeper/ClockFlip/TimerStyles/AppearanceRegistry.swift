@@ -22,6 +22,7 @@ func backgroundView(_ style: ClockBackground) -> some View {
     case .snow:        SnowBackground()
     case .starNest:    StarNestBackground()
     case .pinkFractal: PinkFractalBackground()
+    case .theOtherSide: TheOtherSideBackground()
     case .plain:       Color(.systemBackground)
     }
 }
@@ -50,6 +51,7 @@ extension ClockBackground {
         case .snow:        "Snow"
         case .starNest:    "Star Nest"
         case .pinkFractal: "Pink Fractal"
+        case .theOtherSide: "The Other Side"
         case .plain:       "Plain"
         }
     }

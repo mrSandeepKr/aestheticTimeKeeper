@@ -9,12 +9,3 @@ public enum TimerStyle: String, Codable, CaseIterable, Sendable {
     case flipClock
     case textRotation
 }
-
-/// User-selectable full-screen background, persisted on `AppState`.
-/// Same contract as `TimerStyle`, dispatched by `backgroundView(_:)`.
-public enum ClockBackground: String, Codable, CaseIterable, Sendable {
-    case snow
-    case starNest
-    case pinkFractal
-    case plain
-}
