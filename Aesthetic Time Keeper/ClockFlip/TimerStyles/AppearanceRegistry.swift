@@ -19,9 +19,10 @@ func timerView(_ style: TimerStyle, context: TimerRenderContext) -> some View {
 @ViewBuilder
 func backgroundView(_ style: ClockBackground) -> some View {
     switch style {
-    case .snow:     SnowBackground()
-    case .starNest: StarNestBackground()
-    case .plain:    Color(.systemBackground)
+    case .snow:        SnowBackground()
+    case .starNest:    StarNestBackground()
+    case .pinkFractal: PinkFractalBackground()
+    case .plain:       Color(.systemBackground)
     }
 }
 
@@ -46,9 +47,10 @@ extension TimerStyle {
 extension ClockBackground {
     var displayName: String {
         switch self {
-        case .snow:     "Snow"
-        case .starNest: "Star Nest"
-        case .plain:    "Plain"
+        case .snow:        "Snow"
+        case .starNest:    "Star Nest"
+        case .pinkFractal: "Pink Fractal"
+        case .plain:       "Plain"
         }
     }
 }

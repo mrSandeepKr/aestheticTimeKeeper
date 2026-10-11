@@ -15,5 +15,6 @@ public enum TimerStyle: String, Codable, CaseIterable, Sendable {
 public enum ClockBackground: String, Codable, CaseIterable, Sendable {
     case snow
     case starNest
+    case pinkFractal
     case plain
 }
